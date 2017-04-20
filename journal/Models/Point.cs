@@ -9,7 +9,7 @@ namespace journal.Models
     {
         public int Id { get; set; }
         public string Value { get; set; }
-        public PointLevel PointLevelId { get; set; }
-        public Subject SubjectId { get; set; }
+        public Guid PointLevelId { get; set; }
+        public Guid SubjectId { get; set; }
     }
 }

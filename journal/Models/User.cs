@@ -11,12 +11,12 @@ namespace journal.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
-        public UserRole UserRollId { get; set; }
-        public string email { get; set; }
-        public int phone { get; set; }
-        public string password { get; set; }
-        public Class ClassId { get; set; }
-        public string degree { get; set; }
-        public string info { get; set; }
+        public Guid UserRollId { get; set; }
+        public string Email { get; set; }
+        public int Phone { get; set; }
+        public string Password { get; set; }
+        public Guid ClassId { get; set; }
+        public string Degree { get; set; }
+        public string Info { get; set; }
     }
 }

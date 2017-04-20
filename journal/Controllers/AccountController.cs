@@ -1,58 +1,77 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using journal.Models;
+using journal.ViewModels;
+using System.Data.Entity;
 
 namespace journal.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-
+        
+            private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
         //
         // GET: /Account/Login
+        [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+           return View();
         }
 
         //
         // POST: /Account/Login
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
+                using (JournalContext db = new JournalContext())
+                {
+                    User user = await db.Users/*.Include(u => u.UserRollId)*/.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("", "Неправильний логін або пароль");
+                    }
+                    else
+                    {
+                        ClaimsIdentity claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+                        claim.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String));
+                        claim.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email, ClaimValueTypes.String));
+                        claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
+                            "OWIN Provider", ClaimValueTypes.String));
+                      //  if (user.UserRollId != null)
+                          //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
 
-            int result = 1;
-            switch ((SignInStatus)result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                        AuthenticationManager.SignOut();
+                        AuthenticationManager.SignIn(new AuthenticationProperties
+                        {
+                            IsPersistent = true
+                        }, claim);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
             }
+            return View(model);
         }
 
+        public ActionResult LogOff() {
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
 
 
         //
@@ -72,8 +91,14 @@ namespace journal.Controllers
         {
             if (ModelState.IsValid)
             {
+                User user = (User)model;
+                using (JournalContext db = new JournalContext())
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();                    
+                }
 
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
 
             }
 
@@ -155,36 +180,5 @@ namespace journal.Controllers
             return View();
         }
 
-
-
-
-
-
-
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
-
-        #region Helpers
-        // ???????????????????
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        #endregion
     }
 }

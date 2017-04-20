@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using journal.Models;
 
+
 namespace journal
 {
     public partial class Startup
@@ -14,7 +15,8 @@ namespace journal
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-
+            
         }
+        
     }
 }

@@ -8,7 +8,7 @@ namespace journal.Models
     public class TeacherSubject
     {
         public int Id { get; set; }
-        public User UserId { get; set; }
-        public Subject SubjectId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid SubjectId { get; set; }
     }
 }
