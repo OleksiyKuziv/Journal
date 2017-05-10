@@ -161,16 +161,22 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Filters\MyAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704191713100_InitialCreate.cs" />
-    <Compile Include="Migrations\201704191713100_InitialCreate.Designer.cs">
-      <DependentUpon>201704191713100_InitialCreate.cs</DependentUpon>
+    <Compile Include="Helpers\Roles.cs" />
+    <Compile Include="Migrations\201705031227326_InitialCreate.cs" />
+    <Compile Include="Migrations\201705031227326_InitialCreate.Designer.cs">
+      <DependentUpon>201705031227326_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704201310337_MigrationDB.cs" />
-    <Compile Include="Migrations\201704201310337_MigrationDB.Designer.cs">
-      <DependentUpon>201704201310337_MigrationDB.cs</DependentUpon>
+    <Compile Include="Migrations\201705041249047_MigrateDB.cs" />
+    <Compile Include="Migrations\201705041249047_MigrateDB.Designer.cs">
+      <DependentUpon>201705041249047_MigrateDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705041447280_MigrateDB1.cs" />
+    <Compile Include="Migrations\201705041447280_MigrateDB1.Designer.cs">
+      <DependentUpon>201705041447280_MigrateDB1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
@@ -178,6 +184,7 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\JournalContext.cs" />
+    <Compile Include="ViewModels\ClassViewModels.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageType.cs" />
@@ -190,6 +197,16 @@
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MessageTypeViewModels.cs" />
+    <Compile Include="ViewModels\MessageViewModels.cs" />
+    <Compile Include="ViewModels\PointLevelViewBag.cs" />
+    <Compile Include="ViewModels\PointViewModels.cs" />
+    <Compile Include="ViewModels\RatingViewModels.cs" />
+    <Compile Include="ViewModels\SchoolViewModel.cs" />
+    <Compile Include="ViewModels\SubjectViewModels.cs" />
+    <Compile Include="ViewModels\TeacherSubjectViewModels.cs" />
+    <Compile Include="ViewModels\UserRoleViewModels.cs" />
+    <Compile Include="ViewModels\UserViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -246,8 +263,9 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\UserRole.cshtml" />
-    <Content Include="Views\Home\SchoolInfo.cshtml" />
+    <Content Include="Views\Home\AddSchool.cshtml" />
     <Content Include="Views\Home\SchoolEdit.cshtml" />
+    <Content Include="Views\Home\CreateClass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -260,11 +278,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704191713100_InitialCreate.resx">
-      <DependentUpon>201704191713100_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705031227326_InitialCreate.resx">
+      <DependentUpon>201705031227326_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704201310337_MigrationDB.resx">
-      <DependentUpon>201704201310337_MigrationDB.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705041249047_MigrateDB.resx">
+      <DependentUpon>201705041249047_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705041447280_MigrateDB1.resx">
+      <DependentUpon>201705041447280_MigrateDB1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

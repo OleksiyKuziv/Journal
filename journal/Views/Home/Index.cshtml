@@ -12,20 +12,30 @@
     <div id="data" class="row">
         <div class="col-md-12">
             <p>
-                <a href="Home/SchoolInfo">Створити нове поле</a>
+                <a href="~/Home/AddSchool">Додати нову школу</a>
             </p>
 
             <table class="table-striped">
-                <tr>
-                    <th>Name</th>
+                @*<tr>
+                    <th></th>
                     <th>Decsription</th>
-                </tr>
+                </tr>*@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Description</td>
-                        <td><a href="Home/SchoolEdit/@item.Id">Редагувати</a></td>
+                        <td>@item.FullName</td>
+                        <td>@item.ShortName</td>
+                        <td>@item.TypeSchool</td>
+                        <td>@item.Degree</td>
+                        <td>@item.OwnerShip</td>
+                        <td>@item.ZipCode</td>
+                        <td>@item.Address1</td>
+                        <td>@item.Address2</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Email</td>
+                        <td>@item.PrincipleId</td>
+                        <td>@item.Regulatory</td>
+                        <td><a href="~/Home/SchoolEdit/@item.Id">Редагувати</a></td>
                     </tr>
                 }
             </table>

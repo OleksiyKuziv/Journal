@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using journal.Models;
+using journal.Helpers;
 
 namespace journal.Controllers
 {
@@ -36,7 +37,8 @@ namespace journal.Controllers
 
             return View();
         }
-
+#region Roles
+        [Authorize(Roles=Roles.Admin)]
         [HttpGet]
         public ActionResult UserRole()
         {
@@ -45,25 +47,27 @@ namespace journal.Controllers
         [HttpPost]
         public ActionResult UserRole(UserRole userRole)
         {
+            userRole.Id = Guid.NewGuid();
             db.UserRoles.Add(userRole);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        #endregion
+#region School
         [HttpGet]
-        public ActionResult SchoolInfo()
+        public ActionResult AddSchool()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult SchoolInfo(School school)
+        public ActionResult AddSchool(School school)
         {
             db.Schools.Add(school);
             db.SaveChanges();
             return View();
         }
-
+        [Authorize(Roles ="admin")]
         [HttpGet]
         public ActionResult SchoolEdit(int id=0)
         {
@@ -79,13 +83,36 @@ namespace journal.Controllers
         public ActionResult SchoolEdit(School school)
         {
             School newschool = db.Schools.Find(school.Id);
-            newschool.Name = school.Name;
-            newschool.Description = school.Description;
+            newschool.FullName = school.FullName;
+            newschool.ShortName = school.ShortName;
+            newschool.TypeSchool = school.TypeSchool;
+            newschool.Degree = school.Degree;
+            newschool.OwnerShip = school.OwnerShip;
+            newschool.ZipCode = school.ZipCode;
+            newschool.Address1 = school.Address1;
+            newschool.Address2 = school.Address2;
+            newschool.PhoneNumber = school.PhoneNumber;
+            newschool.Email = school.Email;
+            newschool.PrincipleId = school.PrincipleId;
+            newschool.Regulatory = school.Regulatory;
             db.Entry(newschool).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+#endregion
+        [HttpGet]
+        public ActionResult CreateClass()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CreateClass(Class newclass)
+        {
+            newclass.Id = Guid.NewGuid();
+            db.Classes.Add(newclass);
+            db.SaveChanges();
+            return View();
+        }
 
     }   
 }

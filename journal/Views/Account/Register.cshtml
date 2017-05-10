@@ -8,56 +8,70 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Roles)
     <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">       
-        <p class="col-md-2 control-label"> <b>First Name</b></p>
+        <p class="col-md-2 col-sm-3 control-label"> First Name</p>
         <div class="col-md-10">           
             <input class="form-control" type="text" name="FirstName" />
         </div>
     </div>
     <div class="form-group">
-        <p class="col-md-2 control-label"><b> Last Name</b></p>
+        <p class="col-md-2 col-sm-3 control-label"> Last Name</p>
         <div class="col-md-10">
             <input class="form-control" type="text" name="LastName"/>
         </div>
     </div>
 
     <div class="form-group">
-        <p class="col-md-2 control-label"><b>Email</b></p>
+        <p class="col-md-2 col-sm-3 control-label">Email</p>
         <div class="col-md-10">
             <input class="form-control" type="email" name="Email" />
         </div>
     </div>
-   
+
     <div class="form-group">
-        <p class="col-md-2 control-label"><b>Age</b></p>
+        <p class="col-md-2 col-sm-3 control-label">Age</p>
         <div class="col-md-10">
             <input class="form-control" type="text" name="Age" />
         </div>
     </div>
     <div class="form-group">
-        <p class="col-md-2 control-label"><b>Phone</b></p>
+        <p class="col-md-2 col-sm-3 control-label">Phone</p>
         <div class="col-md-10">
             <input class="form-control" type="tel" name="Phone" />
         </div>
     </div>
 
     <div class="form-group">
-        <p class="col-md-2 control-label"><b>Password</b></p>
+        <p class="col-md-2 col-sm-3 control-label">Password</p>
         <div class="col-md-10">
             <input class="form-control" type="password" name="Password" />
         </div>
     </div>
     <div class="form-group">
-        <p class="col-md-2 control-label"><b>ConfirmPassword</b></p>
+        <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
         <div class="col-md-10">
             <input class="form-control" type="password" name="ConfirmPassword" />
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <p class="col-md-2 col-sm-3 control-label">Role</p>
+        <div class="col-md-10">
+            <select name="SelectedRole" class="form-control">
+                @foreach (var c in Model.Roles)
+                {
+                   <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+          
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
             <input type="submit" class="btn btn-default" value="Register" />
         </div>
     </div>

@@ -7,6 +7,8 @@ using Microsoft.Owin.Security;
 using journal.Models;
 using journal.ViewModels;
 using System.Data.Entity;
+using journal.Helpers;
+using System;
 
 namespace journal.Controllers
 {
@@ -53,6 +55,7 @@ namespace journal.Controllers
                         claim.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email, ClaimValueTypes.String));
                         claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
                             "OWIN Provider", ClaimValueTypes.String));
+                        claim.AddClaim(new Claim(ClaimTypes.Role, user.UserRollId.ToString()));
                       //  if (user.UserRollId != null)
                           //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
 
@@ -79,7 +82,12 @@ namespace journal.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            RegisterViewModel model = new RegisterViewModel();
+            using (JournalContext db = new JournalContext())
+            {
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+            }
+                return View(model);
         }
 
         //
@@ -89,11 +97,18 @@ namespace journal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            using (JournalContext db = new JournalContext())
+            {
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+            }
             if (ModelState.IsValid)
             {
+
                 User user = (User)model;
                 using (JournalContext db = new JournalContext())
                 {
+                    user.Id = Guid.NewGuid();
+                    
                     db.Users.Add(user);
                     db.SaveChanges();                    
                 }
@@ -101,8 +116,7 @@ namespace journal.Controllers
                     return RedirectToAction("Index", "Home");
 
             }
-
-            // If we got this far, something failed, redisplay form
+           // If we got this far, something failed, redisplay form
             return View(model);
         }
 
