@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using journal.Models;
 using journal.Helpers;
+using journal.ViewModels;
 
 namespace journal.Controllers
 {
@@ -63,15 +64,16 @@ namespace journal.Controllers
         [HttpPost]
         public ActionResult AddSchool(School school)
         {
+            school.Id = Guid.NewGuid();
             db.Schools.Add(school);
             db.SaveChanges();
-            return View();
+            return RedirectToAction("Index");
         }
-        [Authorize(Roles ="admin")]
+        //[Authorize(Roles ="admin")]
         [HttpGet]
-        public ActionResult SchoolEdit(int id=0)
+        public ActionResult SchoolEdit(Guid Id)
         {
-            School school = db.Schools.Find(id);
+            School school = db.Schools.Find(Id);
             if (school == null)
             {
                 return HttpNotFound();
@@ -103,13 +105,18 @@ namespace journal.Controllers
         [HttpGet]
         public ActionResult CreateClass()
         {
-            return View();
+            ClassViewModels model = new ClassViewModels();
+           model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.Id.ToString(), Text = school.ShortName }).ToList();
+           
+                return View(model);
         }
         [HttpPost]
-        public ActionResult CreateClass(Class newclass)
+        public ActionResult CreateClass(ClassViewModels model)
         {
-            newclass.Id = Guid.NewGuid();
-            db.Classes.Add(newclass);
+            model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.Id.ToString(), Text = school.ShortName }).ToList();
+            Class classes = (Class)model;
+            classes.Id = Guid.NewGuid();
+            db.Classes.Add(classes);
             db.SaveChanges();
             return View();
         }

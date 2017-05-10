@@ -99,24 +99,27 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
-            }
-            if (ModelState.IsValid)
-            {
 
-                User user = (User)model;
-                using (JournalContext db = new JournalContext())
+                if (ModelState.IsValid)
                 {
+                    if (db.Users.Any(u => u.Email == model.Email))
+                    {
+                        model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+                        ModelState.AddModelError("Email", "Such email is used. Please choose another.");
+                        return View(model);
+                    }
+                    User user = (User)model;
                     user.Id = Guid.NewGuid();
-                    
                     db.Users.Add(user);
-                    db.SaveChanges();                    
-                }
+                    db.SaveChanges();
+                    
 
                     return RedirectToAction("Index", "Home");
 
+                }
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
             }
-           // If we got this far, something failed, redisplay form
+                // If we got this far, something failed, redisplay form
             return View(model);
         }
 

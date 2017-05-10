@@ -15,7 +15,7 @@ namespace journal.Models
         public int Age { get; set; }
         public Guid UserRollId { get; set; }
         public string Email { get; set; }
-        public int Phone { get; set; }
+        public long Phone { get; set; }
         public string Password { get; set; }
         public Guid ClassId { get; set; }
         public string Degree { get; set; }
