@@ -5,30 +5,33 @@
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
+@*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form"}))*@
+<form method="post" , action="/Account/Register" class="form-horizontal" role="form" novalidate>
+
     @Html.AntiForgeryToken()
-  
+
     <h4>Create a new account.</h4>
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">       
+    <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label"> First Name</p>
-        <div class="col-md-10">           
+        <div class="col-md-10">
             <input class="form-control" type="text" name="FirstName" />
+            @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label"> Last Name</p>
         <div class="col-md-10">
-            <input class="form-control" type="text" name="LastName"/>
+            <input class="form-control" type="text" name="LastName" />
+            @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
 
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Email</p>
         <div class="col-md-10">
-            <input class="form-control" type="email" name="Email" />
+           <input class="form-control" type="email" name="Email" />
+            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
 
@@ -36,12 +39,14 @@
         <p class="col-md-2 col-sm-3 control-label">Age</p>
         <div class="col-md-10">
             <input class="form-control" type="text" name="Age" />
+            @Html.ValidationMessageFor(m => m.Age, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Phone</p>
         <div class="col-md-10">
             <input class="form-control" type="tel" name="Phone" />
+            @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
 
@@ -49,12 +54,14 @@
         <p class="col-md-2 col-sm-3 control-label">Password</p>
         <div class="col-md-10">
             <input class="form-control" type="password" name="Password" />
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
         <div class="col-md-10">
             <input class="form-control" type="password" name="ConfirmPassword" />
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
@@ -63,10 +70,10 @@
             <select name="SelectedRole" class="form-control">
                 @foreach (var c in Model.Roles)
                 {
-                   <option value="@c.Value">@c.Text</option>
+                    <option value="@c.Value">@c.Text</option>
                 }
             </select>
-          
+
         </div>
     </div>
 
@@ -75,7 +82,7 @@
             <input type="submit" class="btn btn-default" value="Register" />
         </div>
     </div>
-}
+</form>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
