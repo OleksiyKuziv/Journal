@@ -16,7 +16,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                return View(db.Schools.ToList());
+                return View();
             }
         }
 
@@ -61,64 +61,5 @@ namespace journal.Controllers
             }
         }
         #endregion
-        #region School
-        [Authorize(Roles = Roles.Admin)]
-        [HttpGet]
-        public ActionResult AddSchool()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
-        public ActionResult AddSchool(School school)
-        {
-            using (JournalContext db = new JournalContext())
-            {
-                school.Id = Guid.NewGuid();
-                db.Schools.Add(school);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-        }
-        [Authorize(Roles = Roles.Admin)]
-        [HttpGet]
-        public ActionResult SchoolEdit(Guid Id)
-        {
-            using (JournalContext db = new JournalContext())
-            {
-                School school = db.Schools.Find(Id);
-                if (school == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(school);
-            }
-        }
-        [Authorize(Roles = Roles.Admin)]
-        [HttpPost]
-        public ActionResult SchoolEdit(SchoolViewModel school)
-        {
-            using (JournalContext db = new JournalContext())
-            {
-                School newschool = db.Schools.Find(school.Id);
-                newschool.FullName = school.FullName;
-                newschool.ShortName = school.ShortName;
-                newschool.TypeSchool = school.TypeSchool;
-                newschool.Degree = school.Degree;
-                newschool.OwnerShip = school.OwnerShip;
-                newschool.ZipCode = school.ZipCode;
-                newschool.Address1 = school.Address1;
-                newschool.Address2 = school.Address2;
-                newschool.PhoneNumber = school.PhoneNumber;
-                newschool.Email = school.Email;
-                newschool.PrincipleId = school.PrincipleId;
-                newschool.Regulatory = school.Regulatory;
-                db.Entry(newschool).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-        }
-#endregion
     }
 }
