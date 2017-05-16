@@ -15,8 +15,8 @@ namespace journal.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        
-            private IAuthenticationManager AuthenticationManager
+
+        private IAuthenticationManager AuthenticationManager
         {
             get
             {
@@ -29,7 +29,7 @@ namespace journal.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-           return View();
+            return View();
         }
 
         //
@@ -56,8 +56,8 @@ namespace journal.Controllers
                         claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
                             "OWIN Provider", ClaimValueTypes.String));
                         claim.AddClaim(new Claim(ClaimTypes.Role, user.UserRollId.ToString()));
-                      //  if (user.UserRollId != null)
-                          //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
+                        //  if (user.UserRollId != null)
+                        //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
 
                         AuthenticationManager.SignOut();
                         AuthenticationManager.SignIn(new AuthenticationProperties
@@ -87,7 +87,7 @@ namespace journal.Controllers
             {
                 model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
             }
-                return View(model);
+            return View(model);
         }
 
         //
@@ -112,14 +112,14 @@ namespace journal.Controllers
                     user.Id = Guid.NewGuid();
                     db.Users.Add(user);
                     db.SaveChanges();
-                    
+
 
                     return RedirectToAction("Index", "Home");
 
                 }
                 model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
             }
-                // If we got this far, something failed, redisplay form
+            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -159,7 +159,7 @@ namespace journal.Controllers
                 //    return View("ForgotPasswordConfirmation");
                 //}
 
-                
+
             }
 
             // If we got this far, something failed, redisplay form
@@ -193,8 +193,91 @@ namespace journal.Controllers
             {
                 return View(model);
             }
-           
+
             return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult AccountInfo()
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                   .Select(c => c.Value).SingleOrDefault();
+            Guid id;
+            if (Guid.TryParse(idString, out id))
+            {
+                using (JournalContext db = new JournalContext())
+                {
+                    UserViewModels model = new UserViewModels();
+                    User user = db.Users.Find(id);
+                    model.Id = user.Id;
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                    model.Age = user.Age;
+                    model.UserRollId = user.UserRollId;
+                    model.Email = user.Email;
+                    model.Phone = user.Phone;
+                    model.Password = user.Password;
+                    model.ClassId = user.ClassId;
+                    model.Degree = user.Degree;
+                    model.Info = user.Info;
+                    model.UserRollSelected = db.UserRoles.Where(c => c.Id == model.UserRollId).Select(x => x.Name).FirstOrDefault();
+                    model.ClassSelected = db.Classes.Where(c => c.Id == model.ClassId).Select(x => x.Name).FirstOrDefault();
+                    return View(model);
+                }
+            }
+            AuthenticationManager.SignOut();
+            return View("LogIn");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditAccount(Guid id)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                UserViewModels model = new UserViewModels();
+                User user = db.Users.Find(id);
+                model.Id = user.Id;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.Age = user.Age;
+                model.UserRollId = user.UserRollId;
+                model.Email = user.Email;
+                model.Phone = user.Phone;
+                model.Password = user.Password;
+                model.ClassId = user.ClassId;
+                model.Degree = user.Degree;
+                model.Info = user.Info;
+                model.ClassSelected = db.Classes.Where(c => c.Id == model.ClassId).Select(x => x.Name).FirstOrDefault();
+                model.UserRollSelected = db.UserRoles.Where(c => c.Id == model.UserRollId).Select(x => x.Name).FirstOrDefault();
+                return View(model);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditAccount(UserViewModels model)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                if (ModelState.IsValid)
+                {
+                    User user = db.Users.Find(model.Id);
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.Age = model.Age;
+                    user.Degree = model.Degree;
+                    user.Email = model.Email;
+                    user.Info = model.Info;
+                    user.Phone = model.Phone;
+                    
+                    db.SaveChanges();
+                    return RedirectToAction("AccountInfo");
+                }
+                return View();
+            }
         }
 
     }
