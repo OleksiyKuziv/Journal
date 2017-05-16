@@ -7,6 +7,7 @@ using System.Data.Entity;
 using journal.Models;
 using journal.Helpers;
 using journal.ViewModels;
+using journal.Filters;
 
 namespace journal.Controllers
 {
@@ -42,14 +43,14 @@ namespace journal.Controllers
             return View();
         }
         #region Roles
-        [Authorize(Roles = Roles.Admin)]
+        [Roles(Roles.Admin)]
         [HttpGet]
         public ActionResult UserRole()
         {
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Roles(Roles.Admin)]
         public ActionResult UserRole(UserRole userRole)
         {
             using (JournalContext db = new JournalContext())
