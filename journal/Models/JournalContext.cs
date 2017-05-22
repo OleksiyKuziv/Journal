@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace journal.Models
 {
@@ -14,10 +15,9 @@ namespace journal.Models
         public DbSet<MessageType> MessageTypes { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<PointLevel> PointLevels { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<SubjectType> SubjectTypes { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<School> Schools { get; set; }
+        public DbSet<School> Schools { get; set; }        
     }
 }

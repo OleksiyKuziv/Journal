@@ -51,11 +51,11 @@ namespace journal.Controllers
                     else
                     {
                         ClaimsIdentity claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-                        claim.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String));
+                        claim.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.ID.ToString(), ClaimValueTypes.String));
                         claim.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email, ClaimValueTypes.String));
                         claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
                             "OWIN Provider", ClaimValueTypes.String));
-                        claim.AddClaim(new Claim(ClaimTypes.Role, user.UserRollId.ToString()));
+                        claim.AddClaim(new Claim(ClaimTypes.Role, user.UserRollID.ToString()));
                         //  if (user.UserRollId != null)
                         //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
 
@@ -80,12 +80,15 @@ namespace journal.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [HttpGet]
         public ActionResult Register()
         {
             RegisterViewModel model = new RegisterViewModel();
             using (JournalContext db = new JournalContext())
             {
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
             }
             return View(model);
         }
@@ -104,12 +107,15 @@ namespace journal.Controllers
                 {
                     if (db.Users.Any(u => u.Email == model.Email))
                     {
-                        model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+                        model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                        model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                        model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
                         ModelState.AddModelError("Email", "Such email is used. Please choose another.");
                         return View(model);
                     }
                     User user = (User)model;
-                    user.Id = Guid.NewGuid();
+                    user.ID = Guid.NewGuid();
+                    user.RegisterDate = DateTime.Now;
                     db.Users.Add(user);
                     db.SaveChanges();
 
@@ -117,7 +123,9 @@ namespace journal.Controllers
                     return RedirectToAction("Index", "Home");
 
                 }
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.Id.ToString(), Text = role.Name }).ToList();
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
             }
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -211,19 +219,19 @@ namespace journal.Controllers
                 {
                     UserViewModels model = new UserViewModels();
                     User user = db.Users.Find(id);
-                    model.Id = user.Id;
+                    model.ID = user.ID;
                     model.FirstName = user.FirstName;
                     model.LastName = user.LastName;
                     model.Age = user.Age;
-                    model.UserRollId = user.UserRollId;
+                    model.UserRollID = user.UserRollID;
                     model.Email = user.Email;
                     model.Phone = user.Phone;
                     model.Password = user.Password;
-                    model.ClassId = user.ClassId;
+                    model.ClassID = user.ClassID;
                     model.Degree = user.Degree;
                     model.Info = user.Info;
-                    model.UserRollSelected = db.UserRoles.Where(c => c.Id == model.UserRollId).Select(x => x.Name).FirstOrDefault();
-                    model.ClassSelected = db.Classes.Where(c => c.Id == model.ClassId).Select(x => x.Name).FirstOrDefault();
+                    model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
+                    model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
                     return View(model);
                 }
             }
@@ -239,19 +247,19 @@ namespace journal.Controllers
             {
                 UserViewModels model = new UserViewModels();
                 User user = db.Users.Find(id);
-                model.Id = user.Id;
+                model.ID = user.ID;
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
                 model.Age = user.Age;
-                model.UserRollId = user.UserRollId;
+                model.UserRollID = user.UserRollID;
                 model.Email = user.Email;
                 model.Phone = user.Phone;
                 model.Password = user.Password;
-                model.ClassId = user.ClassId;
+                model.ClassID = user.ClassID;
                 model.Degree = user.Degree;
                 model.Info = user.Info;
-                model.ClassSelected = db.Classes.Where(c => c.Id == model.ClassId).Select(x => x.Name).FirstOrDefault();
-                model.UserRollSelected = db.UserRoles.Where(c => c.Id == model.UserRollId).Select(x => x.Name).FirstOrDefault();
+                model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
+                model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
                 return View(model);
             }
         }
@@ -264,7 +272,7 @@ namespace journal.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    User user = db.Users.Find(model.Id);
+                    User user = db.Users.Find(model.ID);
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
                     user.Age = model.Age;

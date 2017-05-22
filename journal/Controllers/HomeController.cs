@@ -55,7 +55,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                userRole.Id = Guid.NewGuid();
+                userRole.ID = Guid.NewGuid();
                 db.UserRoles.Add(userRole);
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -20,37 +20,46 @@
                 </button>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                @Html.ActionLink("School", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
                 }
                 else{
-                @Html.ActionLink("School","Index","Home",new { area=""},new {@class="navbar-brand" })
+                @Html.ActionLink("Home","Index","Home",new { area=""},new {@class="navbar-brand" })
                 }
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole(Roles.Roles.Pupil))
                     {
-                        <li>@Html.ActionLink("Home1", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About1", "About", "Home")</li>
-                        <li>@Html.ActionLink("ContactUs1", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("School", "Index", "School")</li>
+                        <li>@Html.ActionLink("Class", "Index", "Class")</li>
+                        <li>@Html.ActionLink("Study Subject", "Indes", "StudySubject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Admin))
                     {
-                        <li>@Html.ActionLink("Home2", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About2", "About", "Home")</li>
-                        <li>@Html.ActionLink("ContactUs2", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("School", "Index", "School")</li>
+                        <li>@Html.ActionLink("Class", "Index", "Class")</li>
+                        <li>@Html.ActionLink("Subject Type", "Index", "SubjectType")</li>
+                        <li>@Html.ActionLink("Subject","Index","Subject")</li>
+                    }
+                    else if (User.IsInRole(Roles.Roles.Principle))
+                    {
+                        <li>@Html.ActionLink("School", "Index", "School")</li>
+                        <li>@Html.ActionLink("Class", "Index", "Class")</li>
+                        <li>@Html.ActionLink("SubjectType", "Index", "SubjectType")</li>
+                        <li>@Html.ActionLink("Subject", "Index", "Subject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Parent))
                     {
-                        <li>@Html.ActionLink("Home3", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About3", "About", "Home")</li>
-                        <li>@Html.ActionLink("ContactUs3", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("School", "Index", "School")</li>
+                        <li>@Html.ActionLink("Class", "Index", "Class")</li>
+                        <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Teacher))
                     {
-                        <li>@Html.ActionLink("Home3", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About3", "About", "Home")</li>
-                        <li>@Html.ActionLink("ContactUs3", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("School", "Index", "School")</li>
+                        <li>@Html.ActionLink("Class", "Index", "Class")</li>
+                        <li>@Html.ActionLink("SubjectType", "Index", "SubjectType")</li>
+                        <li>@Html.ActionLink("Subject","Index","Subject")</li>
                     }
                       else
                     {
