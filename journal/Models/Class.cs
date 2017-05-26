@@ -7,7 +7,7 @@ using System.Text;
 
 namespace journal.Models
 {
-     public  class Class
+    public class Class
     {
         [Key]
         [Index(IsUnique = true)]
@@ -16,5 +16,10 @@ namespace journal.Models
         public int Year { get; set; }
         public Guid? SchoolID { get; set; }
         public virtual School School { get; set; }
+        public virtual ICollection<User> Users { get; set; }
+        public Class()
+        {
+            Users = new List<User>();
+        }
     }
 }

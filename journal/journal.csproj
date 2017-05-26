@@ -171,6 +171,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Roles.cs" />
+    <Compile Include="Migrations\201705191721111_InitialCreate.cs" />
+    <Compile Include="Migrations\201705191721111_InitialCreate.Designer.cs">
+      <DependentUpon>201705191721111_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705241425438_MigrateDB.cs" />
+    <Compile Include="Migrations\201705241425438_MigrateDB.Designer.cs">
+      <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\School.cs" />
@@ -213,6 +222,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\controllers\accountController.js" />
+    <Content Include="Scripts\controllers\classController.js" />
     <Content Include="Scripts\controllers\subjectController.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -291,6 +302,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201705191721111_InitialCreate.resx">
+      <DependentUpon>201705191721111_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705241425438_MigrateDB.resx">
+      <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

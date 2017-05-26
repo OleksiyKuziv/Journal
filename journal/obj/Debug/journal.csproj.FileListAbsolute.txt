@@ -107,4 +107,7 @@ G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.Owin.Security.Tw
 G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.dll
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.pdb
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.InitialCreate.resources
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csproj.GenerateResource.Cache
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csprojResolveAssemblyReference.cache

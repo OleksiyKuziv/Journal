@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Register";
 }
-
+<script src="~/Scripts/controllers/accountController.js"></script>
 <h2>@ViewBag.Title.</h2>
 
 @*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form"}))*@
@@ -67,10 +67,11 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">School</p>
         <div class="col-md-10">
-            <select name="SelectedSchool" class="form-control">
+            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool" >
+                <option></option>
                 @foreach (var c in Model.Schools)
                 {
-                    <option value="@c.Value">@c.Text</option>
+                    <option value="@c.Value" >@c.Text</option>
                 }
             </select>
             </div>
@@ -78,10 +79,11 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Class</p>
             <div class="col-md-10">
-                <select name="SelectedClass" class="form-control">
+                <select name="SelectedClass" class="form-control" id="selectedClass" >
+                    <option></option>
                     @foreach (var c in Model.Classes)
                     {
-                        <option value="@c.Value">@c.Text</option>
+                        <option value="@c.Value" >@c.Text</option>
                     }
                 </select>
             </div>
@@ -90,6 +92,7 @@
                 <p class="col-md-2 col-sm-3 control-label">Role</p>
                 <div class="col-md-10">
                     <select name="SelectedRole" class="form-control">
+                        <option></option>
                         @foreach (var c in Model.Roles)
                         {
                             <option value="@c.Value">@c.Text</option>

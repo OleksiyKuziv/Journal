@@ -23,7 +23,6 @@ namespace journal.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Berezhany, school № 3";
 
             return View();
         }

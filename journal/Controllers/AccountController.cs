@@ -88,7 +88,7 @@ namespace journal.Controllers
             {
                 model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
                 model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
+                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
             }
             return View(model);
         }
@@ -109,7 +109,7 @@ namespace journal.Controllers
                     {
                         model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
                         model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                        model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
+                        model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
                         ModelState.AddModelError("Email", "Such email is used. Please choose another.");
                         return View(model);
                     }
@@ -125,7 +125,7 @@ namespace journal.Controllers
                 }
                 model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
                 model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(newclass => new SelectListItem() { Value = newclass.ID.ToString(), Text = newclass.Name }).ToList();
+                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
             }
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -280,13 +280,33 @@ namespace journal.Controllers
                     user.Email = model.Email;
                     user.Info = model.Info;
                     user.Phone = model.Phone;
+                    user.ClassID = model.ClassID;
+                    user.Password = model.Password;
+                    user.UserRollID = model.UserRollID;
                     
                     db.SaveChanges();
                     return RedirectToAction("AccountInfo");
                 }
-                return View();
+                return View(model);
             }
         }
+        [AllowAnonymous]
+        public JsonResult SearchClass(string selectedSchool)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                Guid SelectedSchool = Guid.Parse(selectedSchool);
+                var @classList = db.Classes.Where(c => c.SchoolID == SelectedSchool).Include(c => c.School).Select(c => new ClassViewModels
+                {
+                    ID=c.ID,
+                    Name=c.Name,
+                    Year=c.Year,
+                    SelectedSchool=c.School.ShortName
+                }).ToList();
 
+
+            return Json(@classList, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
