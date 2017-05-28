@@ -8,9 +8,10 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-
+    <script src="~/Scripts/helpers/doubleClickEvent.js"></script>
 </head>
 <body>
+    <img src="~/Images/giphy.gif" id="loading-image" style="margin: 0; width: 10px; display: none;">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -33,7 +34,7 @@
                     {
                         <li>@Html.ActionLink("School", "Index", "School")</li>
                         <li>@Html.ActionLink("Class", "Index", "Class")</li>
-                        <li>@Html.ActionLink("Study Subject", "Indes", "StudySubject")</li>
+                        <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Admin))
                     {

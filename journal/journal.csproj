@@ -163,6 +163,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SchoolController.cs" />
+    <Compile Include="Controllers\StudySubjectController.cs" />
     <Compile Include="Controllers\SubjectTypeController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
     <Compile Include="Filters\MyAuthorizeAttribute.cs" />
@@ -179,8 +180,17 @@
     <Compile Include="Migrations\201705241425438_MigrateDB.Designer.cs">
       <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705280033422_AddPointValue.cs" />
+    <Compile Include="Migrations\201705280033422_AddPointValue.Designer.cs">
+      <DependentUpon>201705280033422_AddPointValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705280941575_Add DbSet Schedules.cs" />
+    <Compile Include="Migrations\201705280941575_Add DbSet Schedules.Designer.cs">
+      <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
+    <Compile Include="Models\PointValue.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\School.cs" />
     <Compile Include="Models\StudySubject.cs" />
@@ -202,6 +212,7 @@
     <Compile Include="ViewModels\MessageTypeViewModels.cs" />
     <Compile Include="ViewModels\MessageViewModels.cs" />
     <Compile Include="ViewModels\PointLevelViewModels.cs" />
+    <Compile Include="ViewModels\PointValueViewModel.cs" />
     <Compile Include="ViewModels\PointViewModels.cs" />
     <Compile Include="ViewModels\SchoolViewModel.cs" />
     <Compile Include="ViewModels\StudySubjectViewModel.cs" />
@@ -219,12 +230,14 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\2014-02-11.jpg" />
+    <Content Include="Images\giphy.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\controllers\accountController.js" />
     <Content Include="Scripts\controllers\classController.js" />
     <Content Include="Scripts\controllers\subjectController.js" />
+    <Content Include="Scripts\helpers\doubleClickEvent.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -291,10 +304,16 @@
     <Content Include="Views\Subject\Details.cshtml" />
     <Content Include="Views\Subject\Edit.cshtml" />
     <Content Include="Views\Subject\Delete.cshtml" />
+    <Content Include="Views\School\CreatePointValue.cshtml" />
+    <Content Include="Views\School\CreatePointLevel.cshtml" />
+    <Content Include="Views\StudySubject\Index.cshtml" />
+    <Content Include="Views\StudySubject\Details.cshtml" />
+    <Content Include="Views\StudySubject\Create.cshtml" />
+    <Content Include="Views\StudySubject\Edit.cshtml" />
+    <Content Include="Views\StudySubject\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -309,6 +328,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705241425438_MigrateDB.resx">
       <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705280033422_AddPointValue.resx">
+      <DependentUpon>201705280033422_AddPointValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705280941575_Add DbSet Schedules.resx">
+      <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -230,6 +230,7 @@ namespace journal.Controllers
                     model.ClassID = user.ClassID;
                     model.Degree = user.Degree;
                     model.Info = user.Info;
+                    model.RegisterDate = user.RegisterDate;
                     model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
                     model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
                     return View(model);
@@ -258,8 +259,10 @@ namespace journal.Controllers
                 model.ClassID = user.ClassID;
                 model.Degree = user.Degree;
                 model.Info = user.Info;
+                model.SchoolID = user.SchoolID;
                 model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
                 model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
+                model.SelectedSchool = db.Schools.Where(c => c.ID == model.SchoolID).Select(c => c.ShortName).FirstOrDefault();
                 return View(model);
             }
         }

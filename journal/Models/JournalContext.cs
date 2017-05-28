@@ -18,6 +18,9 @@ namespace journal.Models
         public DbSet<SubjectType> SubjectTypes { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<School> Schools { get; set; }        
+        public DbSet<School> Schools { get; set; }    
+        public DbSet<PointValue> PointValues { get; set; }
+        public DbSet<StudySubject> StudySubject { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
     }
 }

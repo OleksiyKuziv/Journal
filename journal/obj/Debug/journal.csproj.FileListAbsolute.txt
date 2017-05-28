@@ -111,3 +111,5 @@ G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.I
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csproj.GenerateResource.Cache
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csprojResolveAssemblyReference.cache
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.AddPointValue.resources
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.AddDbSetSchedules.resources
