@@ -1,0 +1,114 @@
+﻿@model journal.ViewModels.UserViewModels
+@{
+    ViewBag.Title = "EditAccout";
+}
+
+<h2>Edit Accout</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <input type="hidden" name="ID" value="@Model.ID" />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">First Name</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="FirstName" value="@Model.FirstName" />
+                @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Last Name</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="LastName" value="@Model.LastName" />
+                @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Email</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Email" value="@Model.Email"  />
+                @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Age</p>
+            <div class="col-md-10">
+                <input class="form-control" type="number" name="Age" value="@Model.Age" />
+                @Html.ValidationMessageFor(m => m.Age, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Class</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="ClassSelected" value="@Model.ClassSelected" disabled/>
+                <input type="hidden" name="ClassID" value="@Model.ClassID"
+                @Html.ValidationMessageFor(m => m.ClassSelected, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Degree</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Degree" value="@Model.Degree" />
+                @Html.ValidationMessageFor(m => m.Degree, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Info</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Info" value="@Model.Info" />
+                @Html.ValidationMessageFor(m => m.Info, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Phone</p>
+            <div class="col-md-10">
+                <input class="form-control" type="number" name="Phone" value="@Model.Phone" />
+                @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">UserRoll</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="UserRollSelected" value="@Model.UserRollSelected" disabled />
+                <input type="hidden" name="UserRollID" value="@Model.UserRollID" />
+                @Html.ValidationMessageFor(m => m.UserRollSelected, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Change Password</p>
+            <div class="col-md-10">
+                <input class="form-control" type="password" name="Password" />
+                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
+        <div class="col-md-10">
+            <input class="form-control" type="password" name="ConfirmPassword" />
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
+        </div>
+    </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<div>
+    <a href="~/Account/AccountInfo">Back to List</a>    
+</div>
+
+

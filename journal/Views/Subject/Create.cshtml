@@ -1,0 +1,49 @@
+﻿@model journal.ViewModels.SubjectViewModels 
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">Teacher</p>
+        <div class="col-md-10">
+            <select name="SelectedTeacher" class="form-control">
+                <option></option>
+                @foreach (var c in Model.Teachers)
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.SelectedTeacher, null, new { @class = "ErrorMessage help-block" })
+        </div>
+    </div>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Subject Type</p>
+            <div class="col-md-10">
+                <select name="SelectedSubjectType" class="form-control">
+                    <option></option>
+                    @foreach (var c in Model.SubjectTypes)
+                {
+                        <option value="@c.Value">@c.Text</option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(m => m.SelectedSubjectType, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+    </fieldset>
+}
+
+<div>
+    <a href="~/Subject/Index">Back to List</a>
+</div>
+
+

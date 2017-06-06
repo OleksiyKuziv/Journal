@@ -1,14 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using journal.Models;
+using journal.ViewModels;
+using System.Data.Entity;
+using journal.Helpers;
+using System;
 
 namespace journal.Controllers
 {
@@ -16,51 +16,81 @@ namespace journal.Controllers
     public class AccountController : Controller
     {
 
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
         //
         // GET: /Account/Login
+        [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         //
         // POST: /Account/Login
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
+                using (JournalContext db = new JournalContext())
+                {
+                    User user = await db.Users/*.Include(u => u.UserRollId)*/.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("", "Неправильний логін або пароль");
+                    }
+                    else
+                    {
+                        ClaimsIdentity claim = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+                        claim.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.ID.ToString(), ClaimValueTypes.String));
+                        claim.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email, ClaimValueTypes.String));
+                        claim.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
+                            "OWIN Provider", ClaimValueTypes.String));
+                        claim.AddClaim(new Claim(ClaimTypes.Role, user.UserRollID.ToString()));
+                        //  if (user.UserRollId != null)
+                        //  claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, user.UserRollId.Name, ClaimValueTypes.String));
 
-            int result = 1;
-            switch ((SignInStatus)result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                        AuthenticationManager.SignOut();
+                        AuthenticationManager.SignIn(new AuthenticationProperties
+                        {
+                            IsPersistent = true
+                        }, claim);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
             }
+            return View(model);
         }
 
+        public ActionResult LogOff() {
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
 
 
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [HttpGet]
         public ActionResult Register()
         {
-            return View();
+            RegisterViewModel model = new RegisterViewModel();
+            using (JournalContext db = new JournalContext())
+            {
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
+            }
+            return View(model);
         }
 
         //
@@ -70,13 +100,33 @@ namespace journal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            using (JournalContext db = new JournalContext())
             {
 
-                return RedirectToAction("Index", "Home");
+                if (ModelState.IsValid)
+                {
+                    if (db.Users.Any(u => u.Email == model.Email))
+                    {
+                        model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                        model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                        model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
+                        ModelState.AddModelError("Email", "Such email is used. Please choose another.");
+                        return View(model);
+                    }
+                    User user = (User)model;
+                    user.ID = Guid.NewGuid();
+                    user.RegisterDate = DateTime.Now;
+                    db.Users.Add(user);
+                    db.SaveChanges();
 
+
+                    return RedirectToAction("Index", "Home");
+
+                }
+                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
+                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
             }
-
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -117,7 +167,7 @@ namespace journal.Controllers
                 //    return View("ForgotPasswordConfirmation");
                 //}
 
-                
+
             }
 
             // If we got this far, something failed, redisplay form
@@ -151,40 +201,115 @@ namespace journal.Controllers
             {
                 return View(model);
             }
-           
+
             return View();
         }
 
-
-
-
-
-
-
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        [Authorize]
+        [HttpGet]
+        public ActionResult AccountInfo()
         {
-            return RedirectToAction("Index", "Home");
-        }
-
-
-        #region Helpers
-        // ???????????????????
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
+            var identity = (ClaimsIdentity)User.Identity;
+            var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                   .Select(c => c.Value).SingleOrDefault();
+            Guid id;
+            if (Guid.TryParse(idString, out id))
             {
-                return Redirect(returnUrl);
+                using (JournalContext db = new JournalContext())
+                {
+                    UserViewModels model = new UserViewModels();
+                    User user = db.Users.Find(id);
+                    model.ID = user.ID;
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                    model.Age = user.Age;
+                    model.UserRollID = user.UserRollID;
+                    model.Email = user.Email;
+                    model.Phone = user.Phone;
+                    model.Password = user.Password;
+                    model.ClassID = user.ClassID;
+                    model.Degree = user.Degree;
+                    model.Info = user.Info;
+                    model.RegisterDate = user.RegisterDate;
+                    model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
+                    model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
+                    return View(model);
+                }
             }
-            return RedirectToAction("Index", "Home");
+            AuthenticationManager.SignOut();
+            return View("LogIn");
         }
-        #endregion
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditAccount(Guid id)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                UserViewModels model = new UserViewModels();
+                User user = db.Users.Find(id);
+                model.ID = user.ID;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.Age = user.Age;
+                model.UserRollID = user.UserRollID;
+                model.Email = user.Email;
+                model.Phone = user.Phone;
+                model.Password = user.Password;
+                model.ClassID = user.ClassID;
+                model.Degree = user.Degree;
+                model.Info = user.Info;
+                model.SchoolID = user.SchoolID;
+                model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
+                model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
+                model.SelectedSchool = db.Schools.Where(c => c.ID == model.SchoolID).Select(c => c.ShortName).FirstOrDefault();
+                return View(model);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditAccount(UserViewModels model)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                if (ModelState.IsValid)
+                {
+                    User user = db.Users.Find(model.ID);
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.Age = model.Age;
+                    user.Degree = model.Degree;
+                    user.Email = model.Email;
+                    user.Info = model.Info;
+                    user.Phone = model.Phone;
+                    user.ClassID = model.ClassID;
+                    user.Password = model.Password;
+                    user.UserRollID = model.UserRollID;
+                    
+                    db.SaveChanges();
+                    return RedirectToAction("AccountInfo");
+                }
+                return View(model);
+            }
+        }
+        [AllowAnonymous]
+        public JsonResult SearchClass(string selectedSchool)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                Guid SelectedSchool = Guid.Parse(selectedSchool);
+                var @classList = db.Classes.Where(c => c.SchoolID == SelectedSchool).Include(c => c.School).Select(c => new ClassViewModels
+                {
+                    ID=c.ID,
+                    Name=c.Name,
+                    Year=c.Year,
+                    SelectedSchool=c.School.ShortName
+                }).ToList();
+
+
+            return Json(@classList, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

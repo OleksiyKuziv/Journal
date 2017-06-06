@@ -1,0 +1,111 @@
+﻿@model journal.Models.School
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+@using (Html.BeginForm())
+{
+   <fieldset>
+        <input type="hidden" name="Id" value="@Model.ID" />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Full name</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="FullName" value="@Model.FullName" />
+                @Html.ValidationMessageFor(m => m.FullName, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Short Name</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="ShortName" value="@Model.ShortName" />
+                @Html.ValidationMessageFor(m => m.ShortName, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Type School</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="TypeSchool" value="@Model.TypeSchool" />
+                @Html.ValidationMessageFor(m => m.TypeSchool, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />       
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Degree</p>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="Degree" value="@Model.Degree" />
+                    @Html.ValidationMessageFor(m => m.Degree, null, new { @class = "ErrorMessage help-block" })
+                </div>
+        </div>
+        <br />          
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Owner ship</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="OwnerShip" value="@Model.OwnerShip" />
+                @Html.ValidationMessageFor(m => m.OwnerShip, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br /> 
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Zip code</p>
+            <div class="col-md-10">
+                <input class="form-control" type="number" name="ZipCode" value="@Model.ZipCode" />
+                @Html.ValidationMessageFor(m => m.ZipCode, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Address</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Address1" value="@Model.Address1" />
+                @Html.ValidationMessageFor(m => m.Address1, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Address2</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Address2" value="@Model.Address2" />
+                @Html.ValidationMessageFor(m => m.Address2, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">PhoneNumber</p>
+            <div class="col-md-10">
+                <input class="form-control" type="tel" name="PhoneNumber" value="@Model.PhoneNumber" />
+                @Html.ValidationMessageFor(m => m.PhoneNumber, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Email</p>
+            <div class="col-md-10">
+                <input class="form-control" type="email" name="Email" value="@Model.Email" />
+                @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Regulatory</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Regulatory" value="@Model.Regulatory" />
+                @Html.ValidationMessageFor(m => m.Regulatory, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<div>
+    <a href="~/School/Index">Back to List</a>
+</div>

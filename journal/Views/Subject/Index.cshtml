@@ -1,0 +1,86 @@
+﻿@model journal.ViewModels.TeacherSubjectViewModel
+@using Roles=journal.Helpers
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/controllers/subjectController.js"></script>
+
+<h2>Index</h2>
+
+<div id="data" class="row">
+    <div class="col-md-12">
+        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+        {
+            <p>
+                <a href="~/Subject/Create">Призначити викладача до предмету</a>
+            </p>
+        }
+          <div class="form-inline">
+              <label for="teacher" >Teacher</label>             
+                  <select class="form-control" id="teacher">
+                      <option></option>
+                      @foreach (var c in Model.Teachers)
+                      {
+                          <option value="@c.Value">@c.Text</option>
+                      }
+                  </select>
+                  <label for="teacher">Subjects</label>
+                  <select id="subject" class="form-control">
+                      <option></option>
+                      @foreach (var c in Model.Subjects)
+                      {
+                          <option value="@c.Value">@c.Text</option>
+                      }
+                  </select>
+
+                  @*<label for="subject">Subject</label>
+                  <input type="text" class="form-control" id="subject" placeholder="Математика" />*@
+                  <button type="button" id="search" class="btn btn-default">Search</button>
+              </div>
+              
+       
+        <br />
+
+        <table class="table table-hover">
+            <thead>
+            <tr class="danger">
+                <th>
+                    Name of teacher
+                </th>
+                <th>
+                    Name of subject
+                </th>                
+                <th>
+                </th>
+            </tr>
+             </thead>
+            <tbody id="tablebody">
+                @{var counter = -1; }
+                @foreach (var item in Model.TeacherSubjectViewModels)
+            {
+                    
+                counter++;
+                    <tr class='@(counter%2==0?"success":"")'>
+                        <td>
+                            @item.SelectedTeacher
+                        </td>
+                        <td>
+                            @item.SelectedSubjectType
+                        </td>
+                        <td>
+                            @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                            {
+                                <a href="~/Subject/Edit/@item.ID">Edit</a>
+                            }
+                            <a href="~/Subject/Details/@item.ID">Details</a>
+                            @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                            {
+                                <a href="~/Subject/Delete/@item.ID">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

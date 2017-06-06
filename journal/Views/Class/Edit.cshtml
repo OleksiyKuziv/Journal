@@ -1,0 +1,102 @@
+﻿@model journal.ViewModels.ClassViewModels
+    @using Roles=journal.Helpers
+@{
+    ViewBag.Title = "Edit";
+}
+<script src="~/Scripts/controllers/classController.js"></script>
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <div>
+        <input type="hidden" name="ID" value="@Model.ID" id="classID"/>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Name of class</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Name" value="@Model.Name" />
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Year</p>
+            <div class="col-md-10">
+                <input class="form-control" type="number" name="Year" value="@Model.Year" />
+                @Html.ValidationMessageFor(m => m.Year, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">School</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" value="@Model.SelectedSchool" disabled />
+                <input type="hidden" value="@Model.SchoolID" name="SchoolID" />
+            </div>
+        </div>
+        </div>
+        <br />
+        <hr />
+        <div>            
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Add new pupil</p>
+            <div class="col-md-10 form-inline">
+                <select name="SelectedNewPupil" id="availableUsers" class="form-control" >
+                    <option></option>
+                    @foreach (var c in Model.NewUsersList)
+                    {
+                        <option value="@c.Value">@c.Text</option>
+                    }
+                </select>
+                <button class="btn btn-default" type="button" onclick="addPupilsToClass()">Add</button>
+            </div>
+        </div>
+        <br>
+            <h3>List os pupils</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="danger">
+                        <th>
+                            Full name
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablebody">
+                    @{var counter = -1; }
+                    @foreach (var item in Model.Users)
+                    {
+                        counter++;
+                        <tr class='@(counter % 2 == 0 ? "success" : "")'>
+                            <td >
+                                @item.Text
+                            </td>
+                            <td>
+                               <button  class="btn btn-default" type="button" onclick="deleteUserWithClass('@item.Value')">Delete</button>                
+                             </td>
+                        
+                        </tr>
+                    }
+                        </tbody>                    
+                </table>
+            </div>
+        </div>
+      </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+
+    </fieldset>
+                        }
+
+<div>
+    <a href="~/Class/Index">Back to List</a> 
+</div>

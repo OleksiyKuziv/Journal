@@ -1,0 +1,46 @@
+﻿@model journal.ViewModels.StudySubjectViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <input type="hidden" name="ID" value="@Model.ID" />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Pupil</p>
+            <div class="col-md-10">
+                <select name="SelectedUser" class="form-control">
+                    @foreach (var c in Model.Users)
+                {
+                        <option value="@c.Value" selected='@(c.Text==Model.SelectedUser)'>@c.Text</option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(m => m.SelectedUser, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Subject</p>
+            <div class="col-md-10">
+                <select name="SelectedSubject" class="form-control">
+                    @foreach (var c in Model.Subjects)
+                {
+                        <option value="@c.Value" selected='@(c.Text==Model.SelectedSubject)'>@c.Text</option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(m => m.SelectedSubject, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+    </fieldset>
+}
+<div>
+    <a href="~/Subject/Index">Back to List</a>
+</div>
+

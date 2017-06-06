@@ -1,40 +1,113 @@
-﻿@model journal.Models.RegisterViewModel
+﻿@model journal.ViewModels.RegisterViewModel
 @{
     ViewBag.Title = "Register";
 }
-
+<script src="~/Scripts/controllers/accountController.js"></script>
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
+@*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form"}))*@
+<form method="post" , action="/Account/Register" class="form-horizontal" role="form" novalidate>
+
     @Html.AntiForgeryToken()
+
     <h4>Create a new account.</h4>
     <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        <p class="col-md-2 col-sm-3 control-label"> First Name</p>
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            <input class="form-control" type="text" name="FirstName" />
+            @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <p class="col-md-2 col-sm-3 control-label"> Last Name</p>
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            <input class="form-control" type="text" name="LastName" />
+            @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
+
     <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <p class="col-md-2 col-sm-3 control-label">Email</p>
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            <input class="form-control" type="email" name="Email" />
+            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">Age</p>
+        <div class="col-md-10">
+            <input class="form-control" type="text" name="Age" />
+            @Html.ValidationMessageFor(m => m.Age, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+        <p class="col-md-2 col-sm-3 control-label">Phone</p>
+        <div class="col-md-10">
+            <input class="form-control" type="tel" name="Phone" />
+            @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
-}
+
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">Password</p>
+        <div class="col-md-10">
+            <input class="form-control" type="password" name="Password" />
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
+        </div>
+    </div>
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
+        <div class="col-md-10">
+            <input class="form-control" type="password" name="ConfirmPassword" />
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
+        </div>
+    </div>
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">School</p>
+        <div class="col-md-10">
+            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool" >
+                <option></option>
+                @foreach (var c in Model.Schools)
+                {
+                    <option value="@c.Value" >@c.Text</option>
+                }
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Class</p>
+            <div class="col-md-10">
+                <select name="SelectedClass" class="form-control" id="selectedClass" >
+                    <option></option>
+                    @foreach (var c in Model.Classes)
+                    {
+                        <option value="@c.Value" >@c.Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+            <div class="form-group">
+                <p class="col-md-2 col-sm-3 control-label">Role</p>
+                <div class="col-md-10">
+                    <select name="SelectedRole" class="form-control">
+                        <option></option>
+                        @foreach (var c in Model.Roles)
+                        {
+                            <option value="@c.Value">@c.Text</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Register" />
+                </div>
+            </div>
+</form>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

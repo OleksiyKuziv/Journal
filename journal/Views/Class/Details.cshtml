@@ -1,0 +1,56 @@
+﻿@model journal.ViewModels.ClassViewModels
+@using Roles=journal.Helpers
+
+    @{
+        ViewBag.Title = "Details";
+    }
+
+    <h2>Details</h2>
+
+    <div>
+        <h4>Class</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Name
+            </dt>
+
+            <dd>
+                @Model.Name
+            </dd>
+
+            <dt>
+                Year
+            </dt>
+
+            <dd>
+                @Model.Year
+            </dd>
+
+            <dt>
+                School
+            </dt>
+
+            <dd>
+                @Model.SelectedSchool
+            </dd>
+            <dt>
+            Pupils
+            </dt>
+            
+                @foreach (var c in Model.Users)
+                {
+                    <dd>
+                    @c.Text
+                    </dd>
+                }
+            
+        </dl>
+</div>
+<p>
+    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+    {
+    <a href="~/Class/Edit/@Model.ID">Edit</a>
+    }
+    <a href="~/Class/Index">Back to List</a>
+</p>
