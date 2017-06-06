@@ -1,0 +1,21 @@
+﻿@model journal.Models.UserRole
+@{
+    ViewBag.Title = "UserRolle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create rolle</h2>
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+    <div><p> Введіть назву ролі</p></div>
+    <div>
+        <input type="text" name="Name" />
+    </div>
+    <div>
+        <input type="submit" value="Submit">
+    </div>
+        </fieldset>
+}
+

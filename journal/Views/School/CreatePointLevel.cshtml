@@ -1,0 +1,36 @@
+﻿@model journal.ViewModels.PointLevelViewModels
+@{
+    ViewBag.Title = "CreatePointLevel";
+}
+
+<h2>Create type of point</h2>
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Name</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Name" />
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Level</p>
+            <div class="col-md-10">
+                <input class="form-control" type="number" name="Level" />
+                @Html.ValidationMessageFor(m => m.Level, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input id="btnSubmit" class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+    </fieldset>
+}
+<div>
+    <a href="~/School/Index">Back to List</a>
+</div>

@@ -1,0 +1,37 @@
+﻿@model journal.ViewModels.StudySubjectViewModel
+    @using Roles=journal.Helpers
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Class</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Name of pupil
+        </dt>
+
+        <dd>
+            @Model.SelectedUser
+        </dd>
+
+        <dt>
+            Name of Subject
+        </dt>
+
+        <dd>
+            @Model.SelectedSubject
+        </dd>
+    </dl>
+</div>
+<p>
+    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+    {
+        <a href="~/Subject/Edit/@Model.ID">Edit</a>
+    }
+    <a href="~/Subject/Index">Back to List</a>
+</p>
+

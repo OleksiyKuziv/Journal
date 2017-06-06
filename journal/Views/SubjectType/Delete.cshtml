@@ -1,0 +1,39 @@
+﻿@model journal.ViewModels.SubjectTypeViewModels
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Subject</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Name
+        </dt>
+
+        <dd>
+            @Model.Name
+        </dd>
+
+        <dt>
+            Description
+        </dt>
+
+        <dd>
+            @Model.Description
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a href="~/SubjectType/Index">Back to List</a>
+        </div>
+    }
+</div>
+

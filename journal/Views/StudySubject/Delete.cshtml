@@ -1,0 +1,27 @@
+﻿@model journal.ViewModels.StudySubjectViewModel
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+<div class="alert alert-danger">
+    <h3>Are you sure you want to delete this?</h3>
+    </div>
+
+<div>
+    <h4>Study Subject</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt> Name of pupil</dt>
+        <dd>@Model.SelectedUser</dd>
+        <dt>Name of Subject</dt>
+        <dd>@Model.SelectedSubject</dd>
+    </dl>
+    @using (Html.BeginForm())
+    {
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a href="~/StudySubject/Index">Back to List</a>
+        </div>
+    }
+</div>

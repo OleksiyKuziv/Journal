@@ -1,0 +1,37 @@
+﻿@model journal.ViewModels.SubjectTypeViewModels
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label"> Name of subject</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Name" />
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label"> Description</p>
+            <div class="col-md-10">
+                <textarea class="form-control"rows="3" name="Description" ></textarea>
+                @Html.ValidationMessageFor(m => m.Description, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>       
+        <div class="form-group">
+            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="btn btn-default" type="submit" value="Submit">
+            </div>
+        </div>
+    </fieldset>
+}
+
+<div>
+    <a href="~/Subject/Index">Back to List</a>
+</div>
+
+
