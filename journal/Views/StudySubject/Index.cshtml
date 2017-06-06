@@ -1,10 +1,10 @@
-﻿@model IEnumerable<journal.ViewModels.StudySubjectViewModel>
+﻿@model journal.ViewModels.StudyUserSubjectDropdownViewModel
 @using Roles = journal.Helpers
 
 @{
     ViewBag.Title = "Index";
 }
-
+<script src="~/Scripts/controllers/studySubjectController.js"></script>
 <h2>Index</h2>
 
 
@@ -16,6 +16,28 @@
                 <a href="~/StudySubject/Create">Вибрати новий предмет для вивчення</a>
             </p>
         }
+
+        <div class="form-inline">
+            <label for="teacher">User</label>
+            <select class="form-control" id="user">
+                <option></option>
+                @foreach (var c in Model.Users)
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+            <label for="teacher">Subjects</label>
+            <select id="subject" class="form-control">
+                <option></option>
+                @foreach (var c in Model.Subjects)
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+            <button type="button" id="search" class="btn btn-default">Search</button>
+        </div>
+
+        <br />
 
         <table class="table table-hover">
             <thead>
@@ -32,7 +54,7 @@
             </thead>
             <tbody id="tablebody">
                 @{var counter = -1; }
-                @foreach (var item in Model)
+                @foreach (var item in Model.StudySubjects)
                 {
 
                     counter++;

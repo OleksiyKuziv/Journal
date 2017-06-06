@@ -38,11 +38,7 @@ namespace journal.Controllers
         {        
             using (JournalContext db = new JournalContext())
             {
-                //if (teacher == null && subject == null)
-                //{
-
-                //}
-                var newTeacherSubjectList = db.Subjects.Where(c=> (c.Teacher.ID == teacher && c.ID == subject) || (c.Teacher.ID== null && c.ID == subject) || (c.Teacher.ID == teacher && c.ID == null) || true ).Include(s => s.Teacher).Include(s => s.SubjectType).Select(s => new SubjectViewModels()
+                var newTeacherSubjectList = db.Subjects.Where(c=> (c.Teacher.ID == teacher && c.ID == subject) || (teacher== null && c.ID == subject)|| (c.Teacher.ID == teacher && subject == null) || (teacher==null&&subject==null)).Include(s => s.Teacher).Include(s => s.SubjectType).Select(s => new SubjectViewModels()
                 {
                     ID = s.ID,
                     SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,

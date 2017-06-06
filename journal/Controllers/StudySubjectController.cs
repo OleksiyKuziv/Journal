@@ -19,6 +19,11 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
+                var pupilRole = Guid.Parse(Roles.Pupil);
+                var adminRole = Guid.Parse(Roles.Admin);
+                var parentRole = Guid.Parse(Roles.Parent);
+                var monitorGroup = Guid.Parse(Roles.MonitorGroup);
+                StudyUserSubjectDropdownViewModel studyUserSubjectDropdown = new StudyUserSubjectDropdownViewModel();
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
@@ -26,31 +31,25 @@ namespace journal.Controllers
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Principle) || User.IsInRole(Roles.Teacher)||User.IsInRole(Roles.Parent))
+                    studyUserSubjectDropdown.Users = db.Users.Where(c => c.UserRollID == pupilRole).Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.FirstName + " " + s.LastName }).ToList();
+                    studyUserSubjectDropdown.Subjects = db.Subjects.Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.SubjectType.Name }).ToList();
+                    studyUserSubjectDropdown.StudySubjects = db.StudySubject.Where(c =>
+                    (user.UserRollID == adminRole && c.User.SchoolID == user.SchoolID)
+                    ||
+                    (c.UserID == user.ID && c.User.UserRollID == pupilRole && c.User.SchoolID == user.SchoolID)
+                    ||
+                    (user.UserRollID==parentRole&&c.User.SchoolID==user.SchoolID && c.User.ClassID == user.ClassID)
+                    ||
+                    (user.UserRollID==monitorGroup&&c.User.SchoolID==user.SchoolID&&c.User.ClassID==user.ClassID)
+                    ).Include(c => c.User).Include(c => c.Subject).Select(c => new StudySubjectViewModel()
                     {
-                        var allListOfStudyPupil = db.StudySubject.Where(c => c.User.SchoolID == user.SchoolID).Include(c => c.User).Include(c => c.Subject).Select(c => new StudySubjectViewModel()
-                        {
-                            ID = c.ID,
-                            SelectedSubject = c.Subject.SubjectType.Name,
-                            SelectedUser = c.User.FirstName + " " + c.User.LastName
-                        }).ToList();
-                        return View(allListOfStudyPupil);
-                    }
+                        ID = c.ID,
+                        SelectedSubject = c.Subject.SubjectType.Name,
+                        SelectedUser = c.User.FirstName + " " + c.User.LastName
 
-                    var PupilRole = Guid.Parse(Roles.Pupil);
-                        var newPupilStudyList = db.StudySubject.Where(c =>                         
-                        c.UserID == user.ID 
-                        && c.User.UserRollID == PupilRole
-                        &&c.User.SchoolID==user.SchoolID).Include(c => c.User).Include(c => c.Subject).Select(c => new StudySubjectViewModel()
-                        {
-                            ID = c.ID,
-                            SelectedSubject=c.Subject.SubjectType.Name,
-                            SelectedUser=c.User.FirstName+ " "+c.User.LastName                            
-
-                        }).ToList();
-                    return View(newPupilStudyList);
-
-                }                
+                    }).ToList();
+                  return View(studyUserSubjectDropdown);
+                }
             }
             return RedirectToAction("Login");
         }
@@ -214,6 +213,19 @@ namespace journal.Controllers
                 return RedirectToAction("Index");
             }
             
+        }
+        public JsonResult Search(Guid? user, Guid? subject)
+        {
+            using (JournalContext db = new JournalContext())
+            {                
+                var newTeacherSubjectList = db.StudySubject.Where(c => (c.UserID == user && c.Subject.ID == subject) || (user == null && c.Subject.ID == subject) || (c.UserID == user && subject == null) || (user == null && subject == null)).Include(s => s.User).Include(s => s.Subject).Select(s => new StudySubjectViewModel()
+                {
+                    ID = s.ID,
+                    SelectedUser = s.User.FirstName + " " + s.User.LastName,
+                    SelectedSubject = s.Subject.SubjectType.Name
+                }).ToList();
+                return Json(newTeacherSubjectList, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

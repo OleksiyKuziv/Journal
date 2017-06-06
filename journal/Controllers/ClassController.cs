@@ -21,6 +21,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
+                var pupilRole = Guid.Parse(Roles.Pupil);
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();

@@ -256,12 +256,10 @@ namespace journal.Controllers
                 model.Email = user.Email;
                 model.Phone = user.Phone;
                 model.Password = user.Password;
-                model.ClassID = user.ClassID;
                 model.Degree = user.Degree;
                 model.Info = user.Info;
-                model.SchoolID = user.SchoolID;
+                model.SchoolID = user.SchoolID;                
                 model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
-                model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
                 model.SelectedSchool = db.Schools.Where(c => c.ID == model.SchoolID).Select(c => c.ShortName).FirstOrDefault();
                 return View(model);
             }
@@ -283,10 +281,7 @@ namespace journal.Controllers
                     user.Email = model.Email;
                     user.Info = model.Info;
                     user.Phone = model.Phone;
-                    user.ClassID = model.ClassID;
-                    user.Password = model.Password;
-                    user.UserRollID = model.UserRollID;
-                    
+                    user.Password = model.Password;       
                     db.SaveChanges();
                     return RedirectToAction("AccountInfo");
                 }
