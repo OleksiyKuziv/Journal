@@ -42,6 +42,7 @@
                         <li>@Html.ActionLink("Class", "Index", "Class")</li>
                         <li>@Html.ActionLink("Subject Type", "Index", "SubjectType")</li>
                         <li>@Html.ActionLink("Subject","Index","Subject")</li>
+                        <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Principle))
                     {
@@ -49,6 +50,7 @@
                         <li>@Html.ActionLink("Class", "Index", "Class")</li>
                         <li>@Html.ActionLink("SubjectType", "Index", "SubjectType")</li>
                         <li>@Html.ActionLink("Subject", "Index", "Subject")</li>
+                        <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Parent))
                     {

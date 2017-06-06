@@ -218,6 +218,7 @@
     <Compile Include="ViewModels\StudySubjectViewModel.cs" />
     <Compile Include="ViewModels\SubjectTypeViewModels.cs" />
     <Compile Include="ViewModels\SubjectViewModels.cs" />
+    <Compile Include="ViewModels\TeacherSubjectViewModel.cs" />
     <Compile Include="ViewModels\UserRoleViewModels.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
   </ItemGroup>
