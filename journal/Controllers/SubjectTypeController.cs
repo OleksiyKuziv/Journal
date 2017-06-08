@@ -20,10 +20,6 @@ namespace journal.Controllers
                 return View(db.SubjectTypes.ToList());
             }
         }
-
-
-
-
         // GET: Subject/Details/5
         [HttpGet]
         public ActionResult Details(Guid id)
@@ -40,7 +36,7 @@ namespace journal.Controllers
 
         // GET: Subject/Create
         [HttpGet]
-        [Roles(Roles.Admin,Roles.Teacher,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Teacher,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Create()
         {
             return View();
@@ -48,7 +44,7 @@ namespace journal.Controllers
 
         // POST: Subject/Create
         [HttpPost]
-        [Roles(Roles.Admin,Roles.Teacher,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Teacher,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Create(SubjectTypeViewModels model)
         {
             using (JournalContext db = new JournalContext())
@@ -67,7 +63,7 @@ namespace journal.Controllers
 
         // GET: Subject/Edit/5
         [HttpGet]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Edit(Guid id)
         {
             using (JournalContext db = new JournalContext())
@@ -88,7 +84,7 @@ namespace journal.Controllers
 
         // POST: Subject/Edit/5
         [HttpPost]
-        [Roles(Roles.Principle,Roles.Admin)]
+        [Roles(Roles.Principle,Roles.Admin,Roles.SuperAdmin)]
         public ActionResult Edit(SubjectTypeViewModels model)
         {
             using (JournalContext db = new JournalContext())
@@ -107,7 +103,7 @@ namespace journal.Controllers
 
         // GET: Subject/Delete/5
         [HttpGet]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Delete(Guid id)
         {
             using (JournalContext db = new JournalContext()) {
@@ -126,7 +122,7 @@ namespace journal.Controllers
         }
 
         // POST: Subject/Delete/5
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         [HttpPost,ActionName("Delete")]
         public ActionResult DeleteConfirm(Guid id)
         {

@@ -65,7 +65,7 @@ namespace journal.Controllers
 
         // GET: TeacherSubject/Create
         [HttpGet]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Create()
         {
             using (JournalContext db = new JournalContext())
@@ -80,7 +80,7 @@ namespace journal.Controllers
 
         // POST: TeacherSubject/Create
         [HttpPost]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         [ValidateAntiForgeryToken]
         public ActionResult Create(SubjectViewModels model)
         {
@@ -103,7 +103,7 @@ namespace journal.Controllers
 
         // GET: TeacherSubject/Edit/5
         [HttpGet]
-        [Roles(Roles.Admin, Roles.Principle)]
+        [Roles(Roles.Admin, Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Edit(Guid id)
         {
             using (JournalContext db = new JournalContext())
@@ -124,7 +124,7 @@ namespace journal.Controllers
 
         // POST: TeacherSubject/Edit/5
         [HttpPost]
-        [Roles(Roles.Admin, Roles.Principle)]
+        [Roles(Roles.Admin, Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Edit(SubjectViewModels model)
         {
             using (JournalContext db = new JournalContext())
@@ -146,7 +146,7 @@ namespace journal.Controllers
 
         // GET: TeacherSubject/Delete/5
         [HttpGet]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Delete(Guid id)
         {
             using (JournalContext db = new JournalContext())
@@ -167,7 +167,7 @@ namespace journal.Controllers
         }
 
         // POST: TeacherSubject/Delete/5
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirm(SubjectViewModels model)

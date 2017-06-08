@@ -1,4 +1,5 @@
 ﻿@model journal.ViewModels.ClassViewModels
+    @using Roles=journal.Helpers
 
 @{
     ViewBag.Title = "Create";
@@ -24,17 +25,20 @@
                 @Html.ValidationMessageFor(m => m.Year, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
+        @if (User.IsInRole(Roles.Roles.SuperAdmin))
+        {
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">School</p>
             <div class="col-md-10">
                 <select name="SelectedSchool" class="form-control">
                     @foreach (var c in Model.Schools)
-                {
+                    {
                         <option value="@c.Value">@c.Text</option>
                     }
                 </select>                
             </div>
         </div>
+        }
         <div class="form-group">
             <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
                 <input class="btn btn-default" type="submit" value="Submit">

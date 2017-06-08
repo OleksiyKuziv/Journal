@@ -8,14 +8,14 @@
 
 <div id="data" class="row">
     <div class="col-md-12">
-        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle))
+        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle)||User.IsInRole(Roles.Roles.SuperAdmin))
         {
         <p>
             <a href="~/School/Create">Створити нову школу</a>
             <br />
-            <a href="~/School/CreatePointValue">Створити нову оцінку</a>
+            <a href="~/School/IndexPointValue">Переглянути оцінки</a>
             <br />
-            <a href="~/School/CreatePointLevel">Створити новий тип оцінок</a>
+            <a href="~/School/IndexPointLevel">Переглянути типи оцінок</a>
         </p>
         }
         <table class="table table-hover">
@@ -101,12 +101,12 @@
                             @item.TimeStamp
                         </td>
                     <td>
-                        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle))
+                        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
                         {
                         <a href="~/School/Edit/@item.ID">Edit</a>
                         }
                         <a href="~/School/Details/@item.ID">Details</a>
-                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                        @if (User.IsInRole(Roles.Roles.SuperAdmin))
                         {
                         <a href="~/School/Delete/@item.ID">Delete</a>
                         }

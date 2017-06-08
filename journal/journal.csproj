@@ -188,6 +188,10 @@
     <Compile Include="Migrations\201705280941575_Add DbSet Schedules.Designer.cs">
       <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706081704377_AddSchoolID.cs" />
+    <Compile Include="Migrations\201706081704377_AddSchoolID.Designer.cs">
+      <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
     <Compile Include="Models\PointValue.cs" />
@@ -314,6 +318,8 @@
     <Content Include="Views\StudySubject\Create.cshtml" />
     <Content Include="Views\StudySubject\Edit.cshtml" />
     <Content Include="Views\StudySubject\Delete.cshtml" />
+    <Content Include="Views\School\IndexPointValue.cshtml" />
+    <Content Include="Views\School\IndexPointLevel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -337,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705280941575_Add DbSet Schedules.resx">
       <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706081704377_AddSchoolID.resx">
+      <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

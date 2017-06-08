@@ -105,11 +105,9 @@ namespace journal.ViewModels
                 LastName = model.LastName,
                 Age = model.Age,
                 Email = model.Email,
-                Phone=model.Phone,
-                Password=model.Password,
-                UserRollID=Guid.Parse(model.SelectedRole),
-                SchoolID=Guid.Parse(model.SelectedSchool),
-                ClassID=Guid.Parse(model.SelectedClass)
+                Phone = model.Phone,
+                Password = model.Password,
+                UserRollID = Guid.Parse(model.SelectedRole)
             };
                
         }

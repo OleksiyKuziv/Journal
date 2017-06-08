@@ -71,7 +71,7 @@ namespace journal.Controllers
 
         // GET: StudySubject/Create
         [HttpGet]
-        [Roles(Roles.Admin, Roles.Principle, Roles.Pupil)]
+        [Roles(Roles.Admin, Roles.Principle, Roles.Pupil,Roles.SuperAdmin)]
         public ActionResult Create()
         {
             var identity = (ClaimsIdentity)User.Identity;
@@ -97,6 +97,7 @@ namespace journal.Controllers
 
         // POST: StudySubject/Create
         [HttpPost]
+        [Roles(Roles.Admin, Roles.Principle, Roles.Pupil, Roles.SuperAdmin)]
         public ActionResult Create(StudySubjectViewModel model)
         {
             using (JournalContext db = new JournalContext())
@@ -149,7 +150,7 @@ namespace journal.Controllers
 
         // POST: StudySubject/Edit/5
         [HttpPost]
-        [Roles(Roles.Admin,Roles.Principle)]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Edit(StudySubjectViewModel model)
         {
 
@@ -181,7 +182,7 @@ namespace journal.Controllers
 
         // GET: StudySubject/Delete/5
         [HttpGet]
-        [Roles(Roles.Admin, Roles.Principle)]
+        [Roles(Roles.Admin, Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -203,6 +204,7 @@ namespace journal.Controllers
 
         // POST: StudySubject/Delete/5
         [HttpPost]
+        [Roles(Roles.Admin, Roles.Principle, Roles.SuperAdmin)]
         public ActionResult Delete(StudySubjectViewModel model)
         {
             using (JournalContext db = new JournalContext())

@@ -31,8 +31,7 @@ namespace journal.ViewModels
             return new Class
             {
                 Name=model.Name,
-                Year=model.Year,
-                SchoolID=Guid.Parse(model.SelectedSchool)
+                Year=model.Year
             };
         }
     }

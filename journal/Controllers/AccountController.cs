@@ -102,7 +102,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-
+                var superAdminRole = Guid.Parse(Roles.SuperAdmin);
                 if (ModelState.IsValid)
                 {
                     if (db.Users.Any(u => u.Email == model.Email))
@@ -115,6 +115,12 @@ namespace journal.Controllers
                     }
                     User user = (User)model;
                     user.ID = Guid.NewGuid();
+                    if (user.UserRollID != superAdminRole)
+                    {
+
+                        user.SchoolID = Guid.Parse(model.SelectedSchool);
+                        user.ClassID = Guid.Parse(model.SelectedClass);
+                    }
                     user.RegisterDate = DateTime.Now;
                     db.Users.Add(user);
                     db.SaveChanges();

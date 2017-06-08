@@ -1,0 +1,49 @@
+﻿@model List<journal.ViewModels.PointValueViewModel>
+@using Roles=journal.Helpers
+@{
+    ViewBag.Title = "IndexPointValue";
+}
+
+<h2>IndexPointValue</h2>
+@if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
+{
+<p>
+    <a href="~/School/CreatePointValue">Створити нову оцінку</a>
+</p>
+}
+<table class="table table-hover">
+    <thead>
+    <tr class="danger">
+        <th>
+           Name
+        </th>
+        @if (User.IsInRole(Roles.Roles.SuperAdmin))
+        {
+            <th>
+                School
+            </th>
+        }
+</tr>
+</thead>
+    <tbody>
+        @{var counter = -1;}
+        @foreach (var item in Model)
+        {
+            counter++;
+            <tr class='@(counter % 2 == 0 ? "success" : "")'>
+                <td>
+                    @item.Name
+                </td>
+                @if (User.IsInRole(Roles.Roles.SuperAdmin))
+                {
+                <td>
+                    @item.SelectedSchool
+                </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a href="~/School/Index">Back to School</a>
+</div>

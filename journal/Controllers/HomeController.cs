@@ -42,14 +42,14 @@ namespace journal.Controllers
             return View();
         }
         #region Roles
-        [Roles(Roles.Admin)]
+        [Roles(Roles.SuperAdmin)]
         [HttpGet]
         public ActionResult UserRole()
         {
             return View();
         }
         [HttpPost]
-        [Roles(Roles.Admin)]
+        [Roles(Roles.SuperAdmin)]
         public ActionResult UserRole(UserRole userRole)
         {
             using (JournalContext db = new JournalContext())

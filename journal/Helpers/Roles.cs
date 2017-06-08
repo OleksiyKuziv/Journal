@@ -13,5 +13,6 @@ namespace journal.Helpers
         public const string Teacher = "8934f7ba-b62b-4139-b366-442d855eccb0";
         public const string Principle = "20ddd88d-013b-4276-a415-8d9018bdc794";
         public const string MonitorGroup = "4d6156e9-bc1a-42dc-a387-218b10a495b8";
+        public const string SuperAdmin = "cf5c6dd0-056e-43c2-91d9-03a8abfac734";
     }
 }
