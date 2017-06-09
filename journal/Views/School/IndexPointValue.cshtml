@@ -5,6 +5,10 @@
 }
 
 <h2>IndexPointValue</h2>
+@if (TempData["notice"] != null)
+{
+    <h3 style="color:red">@TempData["notice"]</h3>
+}
 @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
 {
 <p>

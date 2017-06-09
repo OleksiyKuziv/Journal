@@ -320,6 +320,7 @@
     <Content Include="Views\StudySubject\Delete.cshtml" />
     <Content Include="Views\School\IndexPointValue.cshtml" />
     <Content Include="Views\School\IndexPointLevel.cshtml" />
+    <Content Include="Views\School\EditPointLevel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
