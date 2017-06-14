@@ -219,6 +219,7 @@
     <Compile Include="ViewModels\PointValueViewModel.cs" />
     <Compile Include="ViewModels\PointViewModels.cs" />
     <Compile Include="ViewModels\SchoolViewModel.cs" />
+    <Compile Include="ViewModels\SelectListViewModel.cs" />
     <Compile Include="ViewModels\StudySubjectViewModel.cs" />
     <Compile Include="ViewModels\StudyUserSubjectDropdownViewModel.cs" />
     <Compile Include="ViewModels\SubjectTypeViewModels.cs" />

@@ -21,6 +21,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
+                var parentRole = Guid.Parse(Roles.Parent);
                 var pupilRole = Guid.Parse(Roles.Pupil);
                 var superAdmin = Guid.Parse(Roles.SuperAdmin);
                 var identity = (ClaimsIdentity)User.Identity;
@@ -30,7 +31,9 @@ namespace journal.Controllers
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    var newClassList = db.Classes.Where(c => (c.SchoolID == user.SchoolID)||(user.UserRollID==superAdmin)).Include(c => c.Users).Include(s => s.School).Select(s => new ClassViewModels()
+                    var newClassList = db.Classes.Where(c => (c.SchoolID == user.SchoolID&&(user.UserRollID==pupilRole||user.UserRollID==parentRole))
+                    ||(user.UserRollID==superAdmin)).Include(c => c.Users).Include(s => s.School)
+                    .Select(s => new ClassViewModels()
                     {
                         ID = s.ID,
                         Name = s.Name,
@@ -52,10 +55,15 @@ namespace journal.Controllers
 
         // GET: Class/Details/5
 
-        public ActionResult Details(Guid id)
+        public ActionResult Details(Guid? id)
         {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
             using (JournalContext db = new JournalContext())
             {
+                
                 var StudentRole = Guid.Parse(Roles.Pupil);
                 ClassViewModels model = new ClassViewModels();
                 Class newClass = db.Classes.Find(id);
@@ -231,38 +239,34 @@ namespace journal.Controllers
             }
         }
         [Roles(Roles.Admin, Roles.Principle, Roles.SuperAdmin)]
-        public JsonResult DeleteUserWithClass(string selectedUser)
+        public JsonResult DeleteUserWithClass(Guid selectedUser)
         {
             using (JournalContext db = new JournalContext())
             {
-                Guid selectedUserID = Guid.Parse(selectedUser);
-                User deleteUser = db.Users.Find(selectedUserID);                
-                var schoolID = deleteUser.SchoolID;
-                var classID = deleteUser.ClassID;
+               User user = db.Users.Find(selectedUser);
                 var pupilRole = Guid.Parse(Roles.Pupil);
-                deleteUser.ClassID = null;
+                var classID = user.ClassID;
+                user.ClassID = null;
                 db.SaveChanges();
-                var newList = new List<object>();
-                var newListOfUser = db.Users.Where(c=>c.UserRollID==pupilRole&&c.SchoolID==schoolID&&c.ClassID==classID).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
-                var newListOfUserWithoutClass = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == schoolID && c.ClassID == null).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
-                newList.Add(newListOfUser);
-                newList.Add(newListOfUserWithoutClass);
-                return Json(newList,JsonRequestBehavior.AllowGet);
+                //var newList = new List<object>();
+                var newListOfUser = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == user.SchoolID && (c.ClassID == classID||c.ClassID==null)).Select(x => new SelectListViewModel () { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass=x.ClassID.ToString()}).ToList();
+                //var newListOfUserWithoutClass = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == classID && c.ClassID == null).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
+                //newList.Add(newListOfUser);
+                //newList.Add(newListOfUserWithoutClass);
+                return Json(newListOfUser, JsonRequestBehavior.AllowGet);
             }
         }
         [Roles(Roles.Admin, Roles.Principle, Roles.SuperAdmin)]
-        public JsonResult AddUserToClass(string selectedUser, string classID)
+        public JsonResult AddUserToClass(Guid? selectedUser, Guid? classID)
         {
             using (JournalContext db = new JournalContext())
             {
-                var pupilRole = Guid.Parse(Roles.Pupil);
-                var newSlectedUser = Guid.Parse(selectedUser);
-                var selectedClassID = Guid.Parse(classID);
-                User user = db.Users.Find(newSlectedUser);
-                user.ClassID = selectedClassID;
+                var pupilRole = Guid.Parse(Roles.Pupil);              
+                User user = db.Users.Find(selectedUser);
+                user.ClassID = classID;
                 var schoolID = user.SchoolID;
                 db.SaveChanges();
-                var newListOfUser = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == schoolID && c.ClassID == selectedClassID).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
+                var newListOfUser = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == schoolID && c.ClassID == classID).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
                 return Json(newListOfUser, JsonRequestBehavior.AllowGet);
 
             }
