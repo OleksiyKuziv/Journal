@@ -7,7 +7,7 @@
 <h2>Index</h2>
 <div id="data" class="row">
     <div class="col-md-12">
-       @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Teacher) || User.IsInRole(Roles.Roles.Principle))
+       @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Teacher) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
        {
         <p>
             <a href="~/SubjectType/Create">Create new subject</a>
@@ -36,12 +36,12 @@
                         @item.Description
                     </td>                    
                     <td>
-                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
                         {
                         <a href="~/SubjectType/Edit/@item.ID">Edit</a> 
                         }
                         <a href="~/SubjectType/Details/@item.ID">Details</a> 
-                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
                         {
                         <a href="~/SubjectType/Delete/@item.ID">Delete</a>
                         }

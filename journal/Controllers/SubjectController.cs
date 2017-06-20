@@ -10,6 +10,7 @@ using System.Data;
 using journal.ViewModels;
 using journal.Helpers;
 using journal.Filters;
+using System.Security.Claims;
 
 namespace journal.Controllers
 {
@@ -21,18 +22,28 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                var TeacherRoll = Guid.Parse(Roles.Teacher);
-                TeacherSubjectViewModel teacherSubjectViewModel = new TeacherSubjectViewModel();
-                teacherSubjectViewModel.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.FirstName + " " + s.LastName }).ToList();
-                teacherSubjectViewModel.Subjects = db.Subjects.Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.SubjectType.Name }).ToList();
-                teacherSubjectViewModel.TeacherSubjectViewModels = db.Subjects.Include(s => s.Teacher).Include(s => s.SubjectType)
-                    .Where(c => c.Teacher.UserRollID == TeacherRoll).Select(s => new SubjectViewModels()
+                Guid TeacherRoll = Guid.Parse(Roles.Teacher);
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid id;
+                if (Guid.TryParse(idString, out id))
                 {
-                    ID = s.ID,
-                    SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
-                    SelectedSubjectType = s.SubjectType.Name
-                    }).ToList();                
-                return View(teacherSubjectViewModel);
+                    User user = db.Users.Find(id);
+                    TeacherSubjectViewModel teacherSubjectViewModel = new TeacherSubjectViewModel();
+                    teacherSubjectViewModel.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll&&(c.SchoolID==user.SchoolID||user.UserRollID==superAdmin)).Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.FirstName + " " + s.LastName }).ToList();
+                    teacherSubjectViewModel.Subjects = db.Subjects.Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.SubjectType.Name }).ToList();
+                    teacherSubjectViewModel.TeacherSubjectViewModels = db.Subjects.Include(s => s.Teacher).Include(s => s.SubjectType)
+                        .Where(c => c.Teacher.UserRollID == TeacherRoll&& (c.Teacher.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(s => new SubjectViewModels()
+                        {
+                            ID = s.ID,
+                            SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
+                            SelectedSubjectType = s.SubjectType.Name
+                        }).ToList();
+                    return View(teacherSubjectViewModel);
+                }
+                return RedirectToAction("Login");
             }
         }
 
@@ -74,11 +85,22 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                Guid TeacherRoll = Guid.Parse(Roles.Teacher);
-                SubjectViewModels model = new SubjectViewModels();
-                model.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
-                model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
-                return View(model);
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                Guid teacherRoll = Guid.Parse(Roles.Teacher);
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid id;
+                if (Guid.TryParse(idString, out id))
+                {
+                    User user = db.Users.Find(id);
+                    Guid TeacherRoll = Guid.Parse(Roles.Teacher);
+                    SubjectViewModels model = new SubjectViewModels();
+                    model.Teachers = db.Users.Where(c => c.UserRollID == teacherRoll && (c.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(teacher => new SelectListItem() { Value = teacher.ID.ToString(), Text = teacher.FirstName + " " + teacher.LastName }).ToList();
+                    model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Login");
             }
         }
 
@@ -90,16 +112,26 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                var teacherRoll = Guid.Parse(Roles.Teacher);
                 if (ModelState.IsValid)
                 {
-                    var TeacherRoll = Guid.Parse(Roles.Teacher);
-                    model.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
-                    model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
-                    Subject Subject = (Subject)model;
-                    Subject.ID = Guid.NewGuid();
-                    db.Subjects.Add(Subject);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    var identity = (ClaimsIdentity)User.Identity;
+                    var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                           .Select(c => c.Value).SingleOrDefault();
+                    Guid id;
+                    if (Guid.TryParse(idString, out id))
+                    {
+                        User user = db.Users.Find(id);
+                        model.Teachers = db.Users.Where(c => c.UserRollID == teacherRoll && (c.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(teacher => new SelectListItem() { Value = teacher.ID.ToString(), Text = teacher.FirstName + " " + user.LastName }).ToList();
+                        model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
+                        Subject Subject = (Subject)model;
+                        Subject.ID = Guid.NewGuid();
+                        db.Subjects.Add(Subject);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return RedirectToAction("Login");
                 }
                 return View(model);
             }
@@ -111,17 +143,27 @@ namespace journal.Controllers
         public ActionResult Edit(Guid id)
         {
             using (JournalContext db = new JournalContext())
-            {                
+            {
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
                 Guid teacherRoll = Guid.Parse(Roles.Teacher);
-                var subject = db.Subjects.Include(c => c.Teacher).Include(c => c.SubjectType).Where(c => c.ID == id).Select(c => new SubjectViewModels()
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid userId;
+                if (Guid.TryParse(idString, out userId))
                 {
-                    ID=c.ID,
-                    SelectedTeacher =c.Teacher.FirstName+" "+c.Teacher.LastName,
-                    SelectedSubjectType=c.SubjectType.Name
-                }).FirstOrDefault();
-                subject.Teachers=db.Users.Where(c => c.UserRollID == teacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
-                subject.SubjectTypes=db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
-                return View(subject);
+                    User user = db.Users.Find(userId);
+                    var subject = db.Subjects.Include(c => c.Teacher).Include(c => c.SubjectType).Where(c => c.ID == id).Select(c => new SubjectViewModels()
+                    {
+                        ID = c.ID,
+                        SelectedTeacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
+                        SelectedSubjectType = c.SubjectType.Name
+                    }).FirstOrDefault();
+                    subject.Teachers = db.Users.Where(c => c.UserRollID == teacherRoll && (c.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(teacher => new SelectListItem() { Value = teacher.ID.ToString(), Text = teacher.FirstName + " " + teacher.LastName }).ToList();
+                    subject.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
+                    return View(subject);
+                }
+                return RedirectToAction("Login");
             }
         }
 
@@ -132,16 +174,27 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                if (ModelState.IsValid)
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                Guid teacherRoll = Guid.Parse(Roles.Teacher);
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid id;
+                if (Guid.TryParse(idString, out id))
                 {
-                    var TeacherRoll = Guid.Parse(Roles.Teacher);
-                    model.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
+                    User user = db.Users.Find(id);
+                    
+                    model.Teachers = db.Users.Where(c => c.UserRollID == teacherRoll && (c.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(teacher => new SelectListItem() { Value = teacher.ID.ToString(), Text = teacher.FirstName + " " + teacher.LastName }).ToList();
                     model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
-                    Subject subject = db.Subjects.Find(model.ID);
-                    subject.TeacherID = Guid.Parse(model.SelectedTeacher);
-                    subject.SubjectTypeID = Guid.Parse(model.SelectedSubjectType);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    if (ModelState.IsValid)
+                    {
+                        Subject subject = db.Subjects.Find(model.ID);
+                        subject.TeacherID = Guid.Parse(model.SelectedTeacher);
+                        subject.SubjectTypeID = Guid.Parse(model.SelectedSubjectType);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    return RedirectToAction("Login");
                 }
                 return View(model);
             }

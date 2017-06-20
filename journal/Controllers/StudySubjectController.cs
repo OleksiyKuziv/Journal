@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace journal.Controllers
 {
-    [Authorize]
+    [Roles(Roles.Admin,Roles.MonitorGroup,Roles.Parent,Roles.Principle,Roles.Pupil,Roles.SuperAdmin)]
     public class StudySubjectController : Controller
     {        
         // GET: StudySubject
