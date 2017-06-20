@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace journal.Controllers
 {
+    [Authorize]
     public class SchoolController : Controller
     {
         // GET: School
@@ -160,7 +161,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                var superAdmin = Guid.Parse(Roles.SuperAdmin);
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
@@ -168,7 +169,7 @@ namespace journal.Controllers
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    var newPointValueList = db.PointValues.Where(c => (c.SchoolID == user.SchoolID) || (user.UserRollID == superAdmin)).Include(c => c.School).Select(c => new PointValueViewModel()
+                    var newPointValueList = db.PointValues.Include(c => c.School).Where(c => (c.SchoolID == user.SchoolID) || (user.UserRollID == superAdmin)).Select(c => new PointValueViewModel()
                     {
                         ID = c.ID,
                         Name = c.Name,
@@ -252,7 +253,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                var superAdmin = Guid.Parse(Roles.SuperAdmin);
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
@@ -260,7 +261,7 @@ namespace journal.Controllers
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    var newPointLevelList = db.PointLevels.Where(c => (c.SchoolID == user.SchoolID) || (user.UserRollID == superAdmin)).Include(c => c.School).Select(c => new PointLevelViewModels()
+                    var newPointLevelList = db.PointLevels.Include(c => c.School).Where(c => (c.SchoolID == user.SchoolID) || (user.UserRollID == superAdmin)).Select(c => new PointLevelViewModels()
                     {
                         ID = c.ID,
                         Name = c.Name,
@@ -340,7 +341,7 @@ namespace journal.Controllers
             }
             using (JournalContext db = new JournalContext())
             {
-                var superAdminRole = Guid.Parse(Roles.SuperAdmin);
+                Guid superAdminRole = Guid.Parse(Roles.SuperAdmin);
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
@@ -351,7 +352,7 @@ namespace journal.Controllers
                     var userPointList = db.Points.Where(c => c.User.SchoolID == user.SchoolID).Count();
                     if (userPointList == 0)
                     {
-                        var model = db.PointLevels.Where(c => (c.SchoolID == user.SchoolID && c.School.IsActive == true)||(c.School.IsActive==true&&user.UserRollID==superAdminRole)).Include(c => c.School).Select(c=>new PointLevelViewModels()
+                        var model = db.PointLevels.Include(c => c.School).Where(c => (c.SchoolID == user.SchoolID && c.School.IsActive == true)||(c.School.IsActive==true&&user.UserRollID==superAdminRole)).Select(c=>new PointLevelViewModels()
                         {
                             ID=c.ID,
                             Name=c.Name,

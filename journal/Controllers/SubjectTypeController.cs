@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace journal.Controllers
 {
+    [Authorize]
     public class SubjectTypeController : Controller
     {
         // GET: Subject

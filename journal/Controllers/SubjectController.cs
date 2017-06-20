@@ -13,9 +13,10 @@ using journal.Filters;
 
 namespace journal.Controllers
 {
+    [Roles(Roles.Admin,Roles.Principle,Roles.Teacher,Roles.SuperAdmin)]
     public class SubjectController : Controller
     {
-        // GET: TeacherSubject
+        // GET: Subject
         public ActionResult Index()
         {
             using (JournalContext db = new JournalContext())
@@ -24,7 +25,8 @@ namespace journal.Controllers
                 TeacherSubjectViewModel teacherSubjectViewModel = new TeacherSubjectViewModel();
                 teacherSubjectViewModel.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.FirstName + " " + s.LastName }).ToList();
                 teacherSubjectViewModel.Subjects = db.Subjects.Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.SubjectType.Name }).ToList();
-                teacherSubjectViewModel.TeacherSubjectViewModels = db.Subjects.Where(c => c.Teacher.UserRollID == TeacherRoll).Include(s => s.Teacher).Include(s => s.SubjectType).Select(s => new SubjectViewModels()
+                teacherSubjectViewModel.TeacherSubjectViewModels = db.Subjects.Include(s => s.Teacher).Include(s => s.SubjectType)
+                    .Where(c => c.Teacher.UserRollID == TeacherRoll).Select(s => new SubjectViewModels()
                 {
                     ID = s.ID,
                     SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
@@ -38,7 +40,8 @@ namespace journal.Controllers
         {        
             using (JournalContext db = new JournalContext())
             {
-                var newTeacherSubjectList = db.Subjects.Where(c=> (c.Teacher.ID == teacher && c.ID == subject) || (teacher== null && c.ID == subject)|| (c.Teacher.ID == teacher && subject == null) || (teacher==null&&subject==null)).Include(s => s.Teacher).Include(s => s.SubjectType).Select(s => new SubjectViewModels()
+                var newTeacherSubjectList = db.Subjects.Include(s => s.Teacher).Include(s => s.SubjectType)
+                    .Where(c=> (c.Teacher.ID == teacher && c.ID == subject) || (teacher== null && c.ID == subject)|| (c.Teacher.ID == teacher && subject == null) || (teacher==null&&subject==null)).Select(s => new SubjectViewModels()
                 {
                     ID = s.ID,
                     SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
@@ -53,13 +56,14 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                Subject teacherSubject = db.Subjects.Find(id);
-                SubjectViewModels model = new SubjectViewModels();
-                model.TeacherID = teacherSubject.TeacherID;
-                model.SubjectTypeID = teacherSubject.SubjectTypeID;
-                model.SelectedTeacher = db.Users.Where(c => c.ID == model.TeacherID).Select(c => c.FirstName + " " + c.LastName).FirstOrDefault();
-                model.SelectedSubjectType = db.SubjectTypes.Where(c => c.ID == model.SubjectTypeID).Select(c => c.Name).FirstOrDefault();
-                return View(model);
+                var teacherSubject = db.Subjects.Include(c => c.Teacher).Include(c => c.SubjectType).Where(c => c.ID == id)
+                    .Select(c => new SubjectViewModels()
+                    {
+                        ID = c.ID,                        
+                        SelectedTeacher = c.Teacher.FirstName + " " + c.Teacher.LastName,
+                        SelectedSubjectType = c.SubjectType.Name
+                    }).FirstOrDefault();
+                return View(teacherSubject);
             }
         }
 
@@ -70,7 +74,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                var TeacherRoll = Guid.Parse(Roles.Teacher);
+                Guid TeacherRoll = Guid.Parse(Roles.Teacher);
                 SubjectViewModels model = new SubjectViewModels();
                 model.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
                 model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
@@ -107,18 +111,17 @@ namespace journal.Controllers
         public ActionResult Edit(Guid id)
         {
             using (JournalContext db = new JournalContext())
-            {
-                SubjectViewModels model = new SubjectViewModels();
-                Subject teacherSubject = db.Subjects.Find(id);
-                var TeacherRoll = Guid.Parse(Roles.Teacher);
-                model.ID = teacherSubject.ID;
-                model.TeacherID = teacherSubject.TeacherID;
-                model.SubjectTypeID = teacherSubject.SubjectTypeID;
-                model.Teachers = db.Users.Where(c => c.UserRollID == TeacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
-                model.SubjectTypes = db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
-                model.SelectedTeacher = db.Users.Where(c => c.ID == model.TeacherID).Select(c => c.FirstName + " " + c.LastName).FirstOrDefault();
-                model.SelectedSubjectType = db.SubjectTypes.Where(c => c.ID == model.SubjectTypeID).Select(c => c.Name).FirstOrDefault();
-                return View(model);
+            {                
+                Guid teacherRoll = Guid.Parse(Roles.Teacher);
+                var subject = db.Subjects.Include(c => c.Teacher).Include(c => c.SubjectType).Where(c => c.ID == id).Select(c => new SubjectViewModels()
+                {
+                    ID=c.ID,
+                    SelectedTeacher =c.Teacher.FirstName+" "+c.Teacher.LastName,
+                    SelectedSubjectType=c.SubjectType.Name
+                }).FirstOrDefault();
+                subject.Teachers=db.Users.Where(c => c.UserRollID == teacherRoll).Select(user => new SelectListItem() { Value = user.ID.ToString(), Text = user.FirstName + " " + user.LastName }).ToList();
+                subject.SubjectTypes=db.SubjectTypes.Select(subjectType => new SelectListItem() { Value = subjectType.ID.ToString(), Text = subjectType.Name }).ToList();
+                return View(subject);
             }
         }
 
@@ -151,18 +154,17 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                Subject subject = db.Subjects.Find(id);
-                SubjectViewModels model = new SubjectViewModels();
-                model.ID = subject.ID;
-                model.SubjectTypeID = subject.SubjectTypeID;
-                model.TeacherID = subject.TeacherID;
-                model.SelectedTeacher = db.Users.Where(c => c.ID == model.TeacherID).Select(c => c.FirstName + " " + c.LastName).FirstOrDefault();
-                model.SelectedSubjectType = db.SubjectTypes.Where(c => c.ID == model.SubjectTypeID).Select(c => c.Name).FirstOrDefault();
-                if (model == null)
+                var subject = db.Subjects.Include(c => c.Teacher).Include(c => c.SubjectType).Where(c => c.ID == id).Select(c => new SubjectViewModels()
+                {
+                    ID=c.ID,
+                    SelectedTeacher=c.Teacher.FirstName+" "+c.Teacher.LastName,
+                    SelectedSubjectType=c.SubjectType.Name
+                }).FirstOrDefault();
+                if (subject == null)
                 {
                     return HttpNotFound();
                 }
-                return View(model);
+                return View(subject);
             }
         }
 
@@ -175,6 +177,11 @@ namespace journal.Controllers
             using (JournalContext db = new JournalContext())
             {
                 Subject subject = db.Subjects.Find(model.ID);
+                var userToUpdateSubject = db.StudySubject.Where(c => c.SubjectID == subject.ID);
+                foreach (StudySubject studySubject in userToUpdateSubject)
+                {
+                    db.StudySubject.Remove(studySubject);
+                }
                 db.Subjects.Remove(subject);
                 db.SaveChanges();
                 return RedirectToAction("Index");

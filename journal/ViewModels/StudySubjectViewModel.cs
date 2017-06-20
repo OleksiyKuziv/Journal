@@ -18,7 +18,7 @@ namespace journal.ViewModels
         public List<SelectListItem> Users { get; set; }
         [Required]
         [Display(Name = "student")]
-        public string SelectedUser { get; set; }
+        public string SelectedUser { get; set; }       
         public Guid? SubjectID { get; set; }
         public List<SelectListItem> Subjects { get; set; }
         [Required]
