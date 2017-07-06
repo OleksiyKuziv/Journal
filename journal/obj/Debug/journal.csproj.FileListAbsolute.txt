@@ -114,3 +114,5 @@ G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.A
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.AddDbSetSchedules.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csprojResolveAssemblyReference.cache
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.AddSchoolID.resources
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.ContactUs.resources
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB2.resources

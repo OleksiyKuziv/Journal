@@ -1,14 +1,19 @@
-﻿@{
-    ViewBag.Title = "Contactus";
+﻿@model journal.ViewModels.ContactUsViewModel
+@{
+    ViewBag.Title = "Contact us";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
 <form action="/Home/Contact" method="post">
-    First name: <input type="text" name="fname" />
-    Last name: <input type="text" name="lname">
-    Description: <input type="text" name="description">    
-    <input type="submit" value="Submit" />
+    <div class=" form-group">
+        First name: <input type="text" name="FirstName" required />
+        
+        Last name: <input type="text" name="LastName" required>
+        
+        Description:  <textarea name="Description" rows="4" cols="50" maxlength="250"> </textarea>
+        <input type="submit" value="Submit" />
+    </div>
 </form>
 
 

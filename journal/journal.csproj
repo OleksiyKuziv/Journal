@@ -192,7 +192,16 @@
     <Compile Include="Migrations\201706081704377_AddSchoolID.Designer.cs">
       <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707061508133_ContactUs.cs" />
+    <Compile Include="Migrations\201707061508133_ContactUs.Designer.cs">
+      <DependentUpon>201707061508133_ContactUs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707061537519_MigrateDB2.cs" />
+    <Compile Include="Migrations\201707061537519_MigrateDB2.Designer.cs">
+      <DependentUpon>201707061537519_MigrateDB2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ContactUs.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
     <Compile Include="Models\PointValue.cs" />
     <Compile Include="Models\Schedule.cs" />
@@ -202,6 +211,7 @@
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\JournalContext.cs" />
     <Compile Include="ViewModels\ClassViewModels.cs" />
+    <Compile Include="ViewModels\ContactUsViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageType.cs" />
@@ -348,6 +358,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706081704377_AddSchoolID.resx">
       <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707061508133_ContactUs.resx">
+      <DependentUpon>201707061508133_ContactUs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707061537519_MigrateDB2.resx">
+      <DependentUpon>201707061537519_MigrateDB2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

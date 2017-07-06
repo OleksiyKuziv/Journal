@@ -8,6 +8,7 @@ using journal.Models;
 using journal.Helpers;
 using journal.ViewModels;
 using journal.Filters;
+using System.Web.ModelBinding;
 
 namespace journal.Controllers
 {
@@ -30,13 +31,27 @@ namespace journal.Controllers
         [HttpGet]
         public ActionResult Contact()
         {
+            ContactUsViewModel model = new ContactUsViewModel();
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Contact(string fname, string lname, string description)
+        public ActionResult Contact(ContactUsViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                using (JournalContext db = new JournalContext())
+                {
+                    ContactUs contactUs = new ContactUs();
+                    contactUs.ID = Guid.NewGuid();
+                    contactUs.FirstName = model.FirstName;
+                    contactUs.LastName = model.LastName;
+                    contactUs.Description = model.Description;
+                    db.ContactUs.Add(contactUs);
+                    db.SaveChanges();
+                }
+            }
             ViewBag.Message = "Thank you for your description.";
 
             return View();
