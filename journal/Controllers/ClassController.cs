@@ -29,29 +29,36 @@ namespace journal.Controllers
                 Guid principle = Guid.Parse(Roles.Principle);
                 Guid teacher = Guid.Parse(Roles.Teacher);
                 var identity = (ClaimsIdentity)User.Identity;
-                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                var idString = identity.Claims
+                       .Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
                 Guid id;
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    var newClassList = db.Classes.Include(c => c.Users).Include(s => s.School)
-                        .Where(c => (c.SchoolID == user.SchoolID&&c.ID==user.ClassID&&(user.UserRollID==pupilRole||user.UserRollID==parentRole))
-                    ||(user.UserRollID==superAdmin) || (c.SchoolID == user.SchoolID&&(user.UserRollID==admin||user.UserRollID==teacher||user.UserRollID==principle)))
+                    var newClassList = db.Classes
+                        .Include(c => c.Users).Include(s => s.School)
+                        .Where(c => (c.SchoolID == user.SchoolID&&c.ID==user.ClassID
+                        &&(user.UserRollID==pupilRole||user.UserRollID==parentRole))
+                    ||(user.UserRollID==superAdmin) 
+                    || (c.SchoolID == user.SchoolID&&(user.UserRollID==admin||user.UserRollID==teacher||user.UserRollID==principle)))
                     .Select(s => new ClassViewModels()
                     {
                         ID = s.ID,
                         Name = s.Name,
                         Year = s.Year,
                         SelectedSchool = s.School.ShortName,
-                        Users = s.Users.Where(x=>x.UserRollID==pupilRole).Select(c => new SelectListViewModel
+                        Users = s.Users
+                        .Where(x=>x.UserRollID==pupilRole)
+                        .Select(c => new SelectListViewModel
                         {
                            Value = c.ID.ToString(),
                             Text = c.FirstName + " " + c.LastName
                         }
-                        ).ToList()
-
-                    }).ToList();
+                        )
+                        .ToList()
+                    })
+                    .ToList();
                     return View(newClassList);
                 }
                 return RedirectToAction("Login");
@@ -70,13 +77,18 @@ namespace journal.Controllers
             {
                 
                 Guid StudentRole = Guid.Parse(Roles.Pupil);
-                var newClass = db.Classes.Include(c => c.Users).Include(c => c.School).Where(c => c.ID == id).Select(c => new ClassViewModels()
+                var newClass = db.Classes
+                    .Include(c => c.Users).Include(c => c.School)
+                    .Where(c => c.ID == id).Select(c => new ClassViewModels()
                 {
                     ID = c.ID,
                     Name = c.Name,
                     Year = c.Year,
                     SelectedSchool = c.School.ShortName,
-                    Users = c.Users.Where(x => x.UserRollID == StudentRole && x.SchoolID == c.SchoolID && x.ClassID == c.ID ).Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() }).ToList()
+                    Users = c.Users
+                    .Where(x => x.UserRollID == StudentRole && x.SchoolID == c.SchoolID && x.ClassID == c.ID )
+                    .Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() })
+                    .ToList()
                 }).FirstOrDefault();
                 if (newClass == null)
                 {
@@ -104,7 +116,9 @@ namespace journal.Controllers
                     if (user.UserRollID == superAdminRole)
                     {
                         ClassViewModels model = new ClassViewModels();
-                        model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                        model.Schools = db.Schools
+                            .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                            .ToList();
                         return View(model);
                     }
                 }
@@ -129,7 +143,9 @@ namespace journal.Controllers
                     User user = db.Users.Find(id);
                     if (user.UserRollID == superAdminRole)
                     {
-                        model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                        model.Schools = db.Schools
+                            .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                            .ToList();
                         model.SchoolID = Guid.Parse(model.SelectedSchool);
                     }
                     else
@@ -163,7 +179,11 @@ namespace journal.Controllers
                     return HttpNotFound();
                 }
                 Guid StudentRole = Guid.Parse(Roles.Pupil);                
-                var newClass = db.Classes.Include(c => c.Users).Include(c => c.School).Where(c => c.ID == id).Select(c => new ClassViewModels()
+                var newClass = db.Classes
+                    .Include(c => c.Users)
+                    .Include(c => c.School)
+                    .Where(c => c.ID == id)
+                    .Select(c => new ClassViewModels()
                 {
                     ID = c.ID,
                     Name = c.Name,
@@ -171,7 +191,10 @@ namespace journal.Controllers
                     SchoolID=c.SchoolID,
                     SelectedSchool = c.School.ShortName
                 }).FirstOrDefault();
-                newClass.Users = db.Users.Where(x => x.UserRollID == StudentRole && x.SchoolID == newClass.SchoolID && (x.ClassID == newClass.ID || x.ClassID == null)).Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() }).ToList();
+                newClass.Users = db.Users
+                    .Where(x => x.UserRollID == StudentRole && x.SchoolID == newClass.SchoolID && (x.ClassID == newClass.ID || x.ClassID == null))
+                    .Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() })
+                    .ToList();
                 return View(newClass);
             }
         }
@@ -210,14 +233,22 @@ namespace journal.Controllers
                     return HttpNotFound();
                 }
                 var StudentRole = Guid.Parse(Roles.Pupil);
-                var newClass = db.Classes.Include(c => c.Users).Include(c => c.School).Where(c => c.ID == id).Select(c => new ClassViewModels()
+                var newClass = db.Classes
+                    .Include(c => c.Users)
+                    .Include(c => c.School)
+                    .Where(c => c.ID == id)
+                    .Select(c => new ClassViewModels()
                 {
                     ID = c.ID,
                     Name = c.Name,
                     Year = c.Year,
                     SelectedSchool = c.School.ShortName,
-                    Users = c.Users.Where(x => x.UserRollID == StudentRole && x.SchoolID == c.SchoolID && x.ClassID == c.ID).Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() }).ToList()
-                }).FirstOrDefault();
+                    Users = c.Users
+                    .Where(x => x.UserRollID == StudentRole && x.SchoolID == c.SchoolID && x.ClassID == c.ID)
+                    .Select(x => new SelectListViewModel() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass = x.ClassID.ToString() })
+                    .ToList()
+                })
+                .FirstOrDefault();
                 if (newClass == null)
                 {
                     return HttpNotFound();
@@ -255,7 +286,10 @@ namespace journal.Controllers
                 Guid? classID = user.ClassID;
                 user.ClassID = null;
                 db.SaveChanges();
-                var newListOfUser = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == user.SchoolID && (c.ClassID == classID||c.ClassID==null)).Select(x => new SelectListViewModel () { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass=x.ClassID.ToString()}).ToList();
+                var newListOfUser = db.Users
+                    .Where(c => c.UserRollID == pupilRole && c.SchoolID == user.SchoolID && (c.ClassID == classID||c.ClassID==null))
+                    .Select(x => new SelectListViewModel () { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName, ValueClass=x.ClassID.ToString()})
+                    .ToList();
                 return Json(newListOfUser, JsonRequestBehavior.AllowGet);
             }
         }
@@ -269,7 +303,10 @@ namespace journal.Controllers
                 user.ClassID = classID;
                 Guid? schoolID = user.SchoolID;
                 db.SaveChanges();
-                var newListOfUser = db.Users.Where(c => c.UserRollID == pupilRole && c.SchoolID == schoolID && c.ClassID == classID).Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName }).ToList();
+                var newListOfUser = db.Users
+                    .Where(c => c.UserRollID == pupilRole && c.SchoolID == schoolID && c.ClassID == classID)
+                    .Select(x => new SelectListItem() { Value = x.ID.ToString(), Text = x.FirstName + " " + x.LastName })
+                    .ToList();
                 return Json(newListOfUser, JsonRequestBehavior.AllowGet);
 
             }

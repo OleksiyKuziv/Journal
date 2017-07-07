@@ -4,9 +4,7 @@
     ViewBag.Title = "Index";
 }
 <script src="~/Scripts/controllers/subjectController.js"></script>
-
 <h2>Index</h2>
-
 <div id="data" class="row">
     <div class="col-md-12">
         @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle)||User.IsInRole(Roles.Roles.SuperAdmin))

@@ -28,7 +28,9 @@ namespace journal.Controllers
                 if (Guid.TryParse(idString, out id))
                 {
                     User user = db.Users.Find(id);
-                    return View(db.Schools.Where(c => (c.ID == user.SchoolID && c.IsActive == true) || (user.UserRollID == superAdminRole && c.IsActive == true)).ToList());
+                    return View(db.Schools
+                        .Where(c => (c.ID == user.SchoolID && c.IsActive == true) || (user.UserRollID == superAdminRole && c.IsActive == true))
+                        .ToList());
                 }
             }
             return RedirectToAction("Login");
@@ -65,17 +67,31 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                if (ModelState.IsValid)
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid id;
+                if (Guid.TryParse(idString, out id))
                 {
-                    School school = (School)model;
-                    school.ID = Guid.NewGuid();
-                    school.TimeStamp = DateTime.Now;
-                    school.IsActive = true;
-                    db.Schools.Add(school);
-                    db.SaveChanges();
+                    User user = db.Users.Find(id);
+                    if (user.SchoolID == null)
+                    {
+                        if (ModelState.IsValid)
+                        {
+                            School school = (School)model;
+                            school.ID = Guid.NewGuid();
+                            school.TimeStamp = DateTime.Now;
+                            school.IsActive = true;
+                            db.Schools.Add(school);
+                            db.SaveChanges();
+                            return RedirectToAction("Index");
+                        }
+                        return View(model);
+                    }
+                    TempData["notice"] = "School has already created";
                     return RedirectToAction("Index");
                 }
-                return View(model);
+                return RedirectToAction("Login");
             }
         }
 
@@ -142,7 +158,7 @@ namespace journal.Controllers
         }
 
         // POST: School/Delete/5
-        [Roles(Roles.SuperAdmin)]
+        [Roles(Roles.SuperAdmin,Roles.Admin,Roles.Principle)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirm(Guid id)

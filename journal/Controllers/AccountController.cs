@@ -44,7 +44,8 @@ namespace journal.Controllers
             {
                 using (JournalContext db = new JournalContext())
                 {
-                    User user = await db.Users/*.Include(u => u.UserRollId)*/.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                    User user = await db.Users/*.Include(u => u.UserRollId)*/
+                        .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
                     if (user == null)
                     {
                         ModelState.AddModelError("", "Неправильний логін або пароль");
@@ -87,9 +88,15 @@ namespace journal.Controllers
             RegisterViewModel model = new RegisterViewModel();
             using (JournalContext db = new JournalContext())
             {
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
-                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
+                model.Roles = db.UserRoles
+                    .Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name })
+                    .ToList();
+                model.Schools = db.Schools
+                    .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                    .ToList();
+                model.Classes = db.Classes
+                    .Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name })
+                    .ToList();
             }
             return View(model);
         }
@@ -103,9 +110,15 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
-                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
+                model.Roles = db.UserRoles
+                    .Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name })
+                    .ToList();
+                model.Schools = db.Schools
+                    .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                    .ToList();
+                model.Classes = db.Classes
+                    .Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name })
+                    .ToList();
                
                 if (ModelState.IsValid)
                 {
@@ -220,7 +233,11 @@ namespace journal.Controllers
             {
                 using (JournalContext db = new JournalContext())
                 {                    
-                    var user = db.Users.Include(c => c.UserRole).Include(c => c.Class).Include(c => c.School).Where(c => c.ID == id).Select(c => new UserViewModels()
+                    var user = db.Users
+                        .Include(c => c.UserRole)
+                        .Include(c => c.Class)
+                        .Include(c => c.School)
+                        .Where(c => c.ID == id).Select(c => new UserViewModels()
                     {
                         ID = c.ID,
                         FirstName = c.FirstName,
@@ -248,7 +265,12 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                var user = db.Users.Include(c => c.UserRole).Include(c => c.Class).Include(c => c.School).Where(c => c.ID == id).Select(c => new UserViewModels()
+                var user = db.Users
+                    .Include(c => c.UserRole)
+                    .Include(c => c.Class)
+                    .Include(c => c.School)
+                    .Where(c => c.ID == id)
+                    .Select(c => new UserViewModels()
                 {
                     ID = c.ID,
                     FirstName = c.FirstName,
@@ -258,7 +280,8 @@ namespace journal.Controllers
                     Phone = c.Phone,
                     Degree = c.Degree,
                     Info = c.Info 
-                }).FirstOrDefault();
+                })
+                .FirstOrDefault();
                 return View(user);
             }
         }
@@ -291,13 +314,17 @@ namespace journal.Controllers
             using (JournalContext db = new JournalContext())
             {
                 Guid SelectedSchool = Guid.Parse(selectedSchool);
-                var @classList = db.Classes.Include(c => c.School).Where(c => c.SchoolID == SelectedSchool).Select(c => new ClassViewModels
+                var @classList = db.Classes
+                    .Include(c => c.School)
+                    .Where(c => c.SchoolID == SelectedSchool)
+                    .Select(c => new ClassViewModels
                 {
                     ID=c.ID,
                     Name=c.Name,
                     Year=c.Year,
                     SelectedSchool=c.School.ShortName
-                }).ToList();
+                })
+                .ToList();
             return Json(@classList, JsonRequestBehavior.AllowGet);
             }
         }
