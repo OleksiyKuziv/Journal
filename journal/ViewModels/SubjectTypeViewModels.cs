@@ -18,12 +18,15 @@ namespace journal.ViewModels
         [Required]
         [Display(Name = "description")]
         public string Description { get; set; }
+        public Guid? SchoolID { get; set; }
+        public string SelectedSchool { get; set; }
         public static explicit operator SubjectType(SubjectTypeViewModels model)
         {
             return new SubjectType
             {
                 Name = model.Name,
-                Description=model.Description
+                Description=model.Description,
+                SchoolID=Guid.Parse(model.SelectedSchool)
             };
         } 
     }

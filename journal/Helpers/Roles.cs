@@ -7,12 +7,12 @@ namespace journal.Helpers
 {
     public static class Roles
     {
-        public const string Pupil = "b4506108-fc1f-40a4-972e-7d097ab7afe3";
-        public const string Admin = "ab72df98-180b-4e38-a96a-250ea85f9421";
-        public const string Parent = "f90ae0dc-68b9-4e61-b9bd-0ebed1d0c57a";
-        public const string Teacher = "8934f7ba-b62b-4139-b366-442d855eccb0";
-        public const string Principle = "20ddd88d-013b-4276-a415-8d9018bdc794";
-        public const string MonitorGroup = "4d6156e9-bc1a-42dc-a387-218b10a495b8";
-        public const string SuperAdmin = "cf5c6dd0-056e-43c2-91d9-03a8abfac734";
+        public const string Pupil = "22ed6aec-8513-4e7a-b58e-a73e014d2fe0";
+        public const string Admin = "b3301c93-44db-4059-8629-10b02b644314";
+        public const string Parent = "cf8c4d70-5f3f-4c11-b476-78580e551717";
+        public const string Teacher = "2d7dd0aa-5d16-452c-8424-97f3fcf3823d";
+        public const string Principle = "193a6e88-c8f6-4dd4-8fcc-e8cf697a8025";
+        public const string MonitorGroup = "12eb98c6-edc1-4f54-9da9-bb7fa808ada2";
+        public const string SuperAdmin = "b076f9d6-8b1a-4c91-97fc-2609eca8cfb6";
     }
 }

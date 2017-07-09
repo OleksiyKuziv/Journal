@@ -172,33 +172,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Roles.cs" />
-    <Compile Include="Migrations\201705191721111_InitialCreate.cs" />
-    <Compile Include="Migrations\201705191721111_InitialCreate.Designer.cs">
-      <DependentUpon>201705191721111_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201707081936195_InitialCreate.cs" />
+    <Compile Include="Migrations\201707081936195_InitialCreate.Designer.cs">
+      <DependentUpon>201707081936195_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201705241425438_MigrateDB.cs" />
-    <Compile Include="Migrations\201705241425438_MigrateDB.Designer.cs">
-      <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705280033422_AddPointValue.cs" />
-    <Compile Include="Migrations\201705280033422_AddPointValue.Designer.cs">
-      <DependentUpon>201705280033422_AddPointValue.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705280941575_Add DbSet Schedules.cs" />
-    <Compile Include="Migrations\201705280941575_Add DbSet Schedules.Designer.cs">
-      <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706081704377_AddSchoolID.cs" />
-    <Compile Include="Migrations\201706081704377_AddSchoolID.Designer.cs">
-      <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201707061508133_ContactUs.cs" />
-    <Compile Include="Migrations\201707061508133_ContactUs.Designer.cs">
-      <DependentUpon>201707061508133_ContactUs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201707061537519_MigrateDB2.cs" />
-    <Compile Include="Migrations\201707061537519_MigrateDB2.Designer.cs">
-      <DependentUpon>201707061537519_MigrateDB2.cs</DependentUpon>
+    <Compile Include="Migrations\201707081944129_MigrateDB.cs" />
+    <Compile Include="Migrations\201707081944129_MigrateDB.Designer.cs">
+      <DependentUpon>201707081944129_MigrateDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContactUs.cs" />
@@ -332,6 +312,7 @@
     <Content Include="Views\School\IndexPointValue.cshtml" />
     <Content Include="Views\School\IndexPointLevel.cshtml" />
     <Content Include="Views\School\EditPointLevel.cshtml" />
+    <Content Include="Views\School\DeletePointValue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -344,26 +325,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201705191721111_InitialCreate.resx">
-      <DependentUpon>201705191721111_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707081936195_InitialCreate.resx">
+      <DependentUpon>201707081936195_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705241425438_MigrateDB.resx">
-      <DependentUpon>201705241425438_MigrateDB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705280033422_AddPointValue.resx">
-      <DependentUpon>201705280033422_AddPointValue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705280941575_Add DbSet Schedules.resx">
-      <DependentUpon>201705280941575_Add DbSet Schedules.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706081704377_AddSchoolID.resx">
-      <DependentUpon>201706081704377_AddSchoolID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707061508133_ContactUs.resx">
-      <DependentUpon>201707061508133_ContactUs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707061537519_MigrateDB2.resx">
-      <DependentUpon>201707061537519_MigrateDB2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707081944129_MigrateDB.resx">
+      <DependentUpon>201707081944129_MigrateDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

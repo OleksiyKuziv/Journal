@@ -11,7 +11,15 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Name</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="Name" />
+                <input class="form-control" type="text" name="Name" placeholder="Full Name" autofocus required oninvalid="this.setCustomValidity('Please enter valid Full Name')" oninput="setCustomValidity('')" />
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <p class="col-md-2 col-sm-3 control-label">Value</p>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Value" placeholder="Value" required oninvalid="this.setCustomValidity('Please enter valid Value')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -21,7 +29,8 @@
             <div class="form-group">
                 <p class="col-md-2 col-sm-3 control-label">School</p>
                 <div class="col-md-10">
-                    <select name="SelectedSchool" class="form-control">
+                    <select name="SelectedSchool" class="form-control" required>
+                        <option></option>
                         @foreach (var c in Model.Schools)
                     {
                             <option value="@c.Value">@c.Text</option>

@@ -6,7 +6,7 @@
 <h2>@ViewBag.Title.</h2>
 
 @*@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form"}))*@
-<form method="post" , action="/Account/Register" class="form-horizontal" role="form" novalidate>
+<form method="post" , action="/Account/Register" class="form-horizontal" role="form" >
 
     @Html.AntiForgeryToken()
 
@@ -15,14 +15,14 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label"> First Name</p>
         <div class="col-md-10">
-            <input class="form-control" type="text" name="FirstName" />
+            <input class="form-control" type="text" name="FirstName" value="@Model.FirstName" placeholder="First Name"  autofocus required oninvalid="this.setCustomValidity('Please enter valid First Name')" oninput="setCustomValidity('')"  />
             @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label"> Last Name</p>
         <div class="col-md-10">
-            <input class="form-control" type="text" name="LastName" />
+            <input class="form-control" type="text" name="LastName" value="@Model.LastName" placeholder="Last Name" required oninvalid="this.setCustomValidity('Please enter valid Last Name')" oninput="setCustomValidity('')" />
             @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
@@ -30,7 +30,7 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Email</p>
         <div class="col-md-10">
-            <input class="form-control" type="email" name="Email" />
+            <input class="form-control" type="email" name="Email" value="@Model.Email" placeholder="someoner@example.com" required oninvalid="this.setCustomValidity('Please enter valid Email')" oninput="setCustomValidity('')" />
             @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
@@ -38,14 +38,14 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Age</p>
         <div class="col-md-10">
-            <input class="form-control" type="text" name="Age" />
+            <input class="form-control" type="text" name="Age" value="@Model.Age" placeholder="Age" required oninvalid="this.setCustomValidity('Please enter valid Age')" oninput="setCustomValidity('')" />
             @Html.ValidationMessageFor(m => m.Age, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Phone</p>
-        <div class="col-md-10">
-            <input class="form-control" type="tel" name="Phone" />
+        <div class="col-md-10"> 
+            <input class="form-control" type="tel" name="Phone" placeholder="+38(099)999-9999" pattern="[\+]\d{2}[\(]\d{3}[\)]\d{3}[\-]\d{4}" title="Phone number (Format:+38(063)999-9999)" value="@Model.Phone" required oninvalid="this.setCustomValidity('Please enter valid Phone')" oninput="setCustomValidity('')" />
             @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
@@ -53,21 +53,36 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Password</p>
         <div class="col-md-10">
-            <input class="form-control" type="password" name="Password" />
+            <input class="form-control" type="password" name="Password" required />
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
         <div class="col-md-10">
-            <input class="form-control" type="password" name="ConfirmPassword" />
-            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
+            <input class="form-control" type="password" name="ConfirmPassword"  required/>
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "ErrorMessage help-block" })
         </div>
     </div>
+    
+    <div class="form-group">
+        <p class="col-md-2 col-sm-3 control-label">Role</p>
+        <div class="col-md-10">
+            <select name="SelectedRole" class="form-control" required>
+                <option></option>
+                @foreach (var c in Model.Roles)
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+
+        </div>
+    </div>
+
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">School</p>
         <div class="col-md-10">
-            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool" >
+            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool">
                 <option></option>
                 @foreach (var c in Model.Schools)
                 {
@@ -87,20 +102,8 @@
                     }
                 </select>
             </div>
-        </div>
-            <div class="form-group">
-                <p class="col-md-2 col-sm-3 control-label">Role</p>
-                <div class="col-md-10">
-                    <select name="SelectedRole" class="form-control">
-                        <option></option>
-                        @foreach (var c in Model.Roles)
-                        {
-                            <option value="@c.Value">@c.Text</option>
-                        }
-                    </select>
-
-                </div>
             </div>
+        
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-sm-offset-3 col-md-10">

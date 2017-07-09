@@ -14,7 +14,7 @@
             <div class="form-group">
                 <p class="col-md-2 col-sm-3 control-label">Name</p>
                 <div class="col-md-10">
-                    <input class="form-control" type="text" name="Name" value="@Model.Name" />
+                    <input class="form-control" type="text" name="Name" value="@Model.Name" required oninvalid="this.setCustomValidity('Please enter valid Name')" oninput="setCustomValidity('')" />
                     @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="form-group">
                 <p class="col-md-2 col-sm-3 control-label">Level</p>
                 <div class="col-md-10">
-                    <input class="form-control" type="text" name="Level" value="@Model.Level" />
+                    <input class="form-control" type="text" name="Level" value="@Model.Level" required  oninvalid="this.setCustomValidity('Please enter valid Level')" oninput="setCustomValidity('')" />
                     @Html.ValidationMessageFor(m => m.Level, null, new { @class = "ErrorMessage help-block" })
                 </div>
             </div>
@@ -45,4 +45,7 @@
          </div>
         </fieldset>
 }
+<div>
+    <a href="~/School/IndexPointValue">Back to List</a>
+</div>
 

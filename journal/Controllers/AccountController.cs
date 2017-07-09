@@ -134,7 +134,7 @@ namespace journal.Controllers
                         user.SchoolID = Guid.Parse(model.SelectedSchool);
                         user.ClassID = Guid.Parse(model.SelectedClass);
                     }
-                    else if (user.UserRollID == Guid.Parse(Roles.Principle) || user.UserRollID == Guid.Parse(Roles.Admin) || user.UserRollID == Guid.Parse(Roles.Teacher))
+                    else if ((user.UserRollID == Guid.Parse(Roles.Principle) || user.UserRollID == Guid.Parse(Roles.Admin)&&(model.SelectedSchool!=null)) || user.UserRollID == Guid.Parse(Roles.Teacher))
                     {
                         user.SchoolID = Guid.Parse(model.SelectedSchool);
                     }
@@ -143,8 +143,8 @@ namespace journal.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
-               }
-            return View(model);
+                return View(model);
+            }            
         }
 
         //

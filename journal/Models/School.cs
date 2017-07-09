@@ -20,7 +20,7 @@ namespace journal.Models
         public int ZipCode { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
-        public long PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public int Regulatory { get; set; }
         public DateTime TimeStamp { get; set; }

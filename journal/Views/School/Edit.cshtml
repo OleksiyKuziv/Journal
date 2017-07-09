@@ -11,7 +11,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Full name</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="FullName" value="@Model.FullName" />
+                <input class="form-control" type="text" name="FullName" value="@Model.FullName" autofocus required oninvalid="this.setCustomValidity('Please enter valid Full Name')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.FullName, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Short Name</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="ShortName" value="@Model.ShortName" />
+                <input class="form-control" type="text" name="ShortName" value="@Model.ShortName" required oninvalid="this.setCustomValidity('Please enter valid Short Name')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.ShortName, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -28,7 +28,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Type School</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="TypeSchool" value="@Model.TypeSchool" />
+                <input class="form-control" type="text" name="TypeSchool" value="@Model.TypeSchool" required oninvalid="this.setCustomValidity('Please enter valid Type School')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.TypeSchool, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Degree</p>
                 <div class="col-md-10">
-                    <input class="form-control" type="text" name="Degree" value="@Model.Degree" />
+                    <input class="form-control" type="text" name="Degree" value="@Model.Degree" required oninvalid="this.setCustomValidity('Please enter valid Degree')" oninput="setCustomValidity('')" />
                     @Html.ValidationMessageFor(m => m.Degree, null, new { @class = "ErrorMessage help-block" })
                 </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Owner ship</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="OwnerShip" value="@Model.OwnerShip" />
+                <input class="form-control" type="text" name="OwnerShip" value="@Model.OwnerShip"  required oninvalid="this.setCustomValidity('Please enter valid Owner ship')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.OwnerShip, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Zip code</p>
             <div class="col-md-10">
-                <input class="form-control" type="number" name="ZipCode" value="@Model.ZipCode" />
+                <input class="form-control" type="number" name="ZipCode" value="@Model.ZipCode" pattern=".{4,6}" title="4 to 6 characters" placeholder="Zip code" required oninvalid="this.setCustomValidity('Please enter valid zip')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.ZipCode, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -60,7 +60,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Address</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="Address1" value="@Model.Address1" />
+                <input class="form-control" type="text" name="Address1" value="@Model.Address1" placeholder="Address" required oninvalid="this.setCustomValidity('Please enter valid Address')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Address1, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">PhoneNumber</p>
             <div class="col-md-10">
-                <input class="form-control" type="tel" name="PhoneNumber" value="@Model.PhoneNumber" />
+                <input class="form-control" type="tel" name="PhoneNumber" value="@Model.PhoneNumber" pattern="[\+]\d{2}[\(]\d{3}[\)]\d{3}[\-]\d{4}" title="Phone number (Format:+38(063)999-9999)" required oninvalid="this.setCustomValidity('Please enter valid Phone number')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.PhoneNumber, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -84,7 +84,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Email</p>
             <div class="col-md-10">
-                <input class="form-control" type="email" name="Email" value="@Model.Email" />
+                <input class="form-control" type="email" name="Email" value="@Model.Email" required oninvalid="this.setCustomValidity('Please enter valid Email')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Email, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -92,7 +92,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Regulatory</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="Regulatory" value="@Model.Regulatory" />
+                <input class="form-control" type="text" name="Regulatory" value="@Model.Regulatory" placeholder="Requlatory" required oninvalid="this.setCustomValidity('Please enter valid Regulatory')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Regulatory, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>

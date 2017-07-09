@@ -57,7 +57,8 @@ namespace journal.Controllers
         [Roles(Roles.Admin, Roles.Principle, Roles.SuperAdmin)]
         public ActionResult Create()
         {
-            return View();
+            SchoolViewModel model = new SchoolViewModel();
+            return View(model);
         }
 
         // POST: School/Create
@@ -67,6 +68,7 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
@@ -78,13 +80,25 @@ namespace journal.Controllers
                     {
                         if (ModelState.IsValid)
                         {
-                            School school = (School)model;
-                            school.ID = Guid.NewGuid();
-                            school.TimeStamp = DateTime.Now;
-                            school.IsActive = true;
-                            db.Schools.Add(school);
-                            db.SaveChanges();
-                            return RedirectToAction("Index");
+                            if (db.Schools.Where(c => c.ShortName == model.ShortName).Count() == 0)
+                            {
+                                School school = (School)model;
+                                school.ID = Guid.NewGuid();
+                                school.TimeStamp = DateTime.Now;
+                                school.IsActive = true;
+                                db.Schools.Add(school);
+                                if (user.UserRollID != superAdmin)
+                                {
+                                    user.SchoolID = school.ID;
+                                }
+                                db.SaveChanges();
+                                return RedirectToAction("Index");
+                            }
+                            else
+                            {
+                                TempData["notice"] = "This school is exist.";
+                                return RedirectToAction("Index");
+                            }
                         }
                         return View(model);
                     }
@@ -189,6 +203,7 @@ namespace journal.Controllers
                     {
                         ID = c.ID,
                         Name = c.Name,
+                        Value=c.Value,
                         SelectedSchool = c.School.ShortName
                     }).ToList();
                     return View(newPointValueList);
@@ -246,20 +261,77 @@ namespace journal.Controllers
                     {
                         PointValue pointValue = (PointValue)model;
                         pointValue.ID = Guid.NewGuid();
-                        if (user.UserRollID == Guid.Parse(Roles.SuperAdmin))
+                        if (db.PointValues.Where(c => c.Name == model.Name).Count() == 0)
                         {
-                            pointValue.SchoolID = Guid.Parse(model.SelectedSchool);
+                            if (user.UserRollID == Guid.Parse(Roles.SuperAdmin))
+                            {
+                                pointValue.SchoolID = Guid.Parse(model.SelectedSchool);
+                            }
+                            else
+                            {
+                                pointValue.SchoolID = user.SchoolID;
+                            }
+                            db.PointValues.Add(pointValue);
+                            db.SaveChanges();
+                            return RedirectToAction("IndexPointValue");
                         }
                         else
-                        {
-                            pointValue.SchoolID = user.SchoolID;
-                        }
-                        db.PointValues.Add(pointValue);
-                        db.SaveChanges();
+                            TempData["notice"] = "The point is exist";
                         return RedirectToAction("IndexPointValue");
                     }
                 }
                 return View(model);
+            }
+        }
+        [HttpGet]
+        [Roles(Roles.Admin,Roles.Principle,Roles.SuperAdmin)]
+        public ActionResult DeletePointValue(Guid? id)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                if (id == null)
+                {
+                    return HttpNotFound();
+                }
+                Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                    .Select(c => c.Value).SingleOrDefault();
+                Guid userId;
+                if (Guid.TryParse(idString, out userId))
+                {
+                    User user = db.Users.Find(userId);
+                    var pointValueList = db.Points.Where(c => c.User.SchoolID == user.SchoolID).Count();
+                    if (pointValueList == 0)
+                    {
+                        var pointValue = db.PointValues.Include(c => c.School).Where(c => c.ID == id && (c.SchoolID == user.SchoolID || user.UserRollID == superAdmin)).Select(c => new PointValueViewModel()
+                        {
+                            ID = c.ID,
+                            Name = c.Name,
+                            Value = c.Value,
+                            SelectedSchool = c.School.ShortName
+                        }).FirstOrDefault();
+                        return View(pointValue);
+                    }
+                    else
+                    {
+                        TempData["notice"] = "Users have a points";
+                        return RedirectToAction("IndexPointValue");
+                    }
+                }
+                return RedirectToAction("Login");
+            }
+        }
+        [HttpPost,ActionName("DeletePointValue")]
+        [Roles(Roles.Admin, Roles.Principle, Roles.SuperAdmin)]
+        public ActionResult DeletePointValueConfirmed (PointValueViewModel model)
+        {
+            using (JournalContext db = new JournalContext())
+            {
+                PointValue pointValue = db.PointValues.Find(model.ID);
+                db.PointValues.Remove(pointValue);
+                db.SaveChanges();
+                return RedirectToAction("IndexPointValue");
             }
         }
         #endregion
@@ -330,17 +402,25 @@ namespace journal.Controllers
                     {
                         PointLevel pointLevel = (PointLevel)model;
                         pointLevel.ID = Guid.NewGuid();
-                        if (user.UserRollID == Guid.Parse(Roles.SuperAdmin))
+                        if (db.PointLevels.Where(c => c.Name == model.Name).Count() == 0)
                         {
-                            pointLevel.SchoolID = Guid.Parse(model.SelectedSchool);
+                            if (user.UserRollID == Guid.Parse(Roles.SuperAdmin))
+                            {
+                                pointLevel.SchoolID = Guid.Parse(model.SelectedSchool);
+                            }
+                            else
+                            {
+                                pointLevel.SchoolID = user.SchoolID;
+                            }
+                            db.PointLevels.Add(pointLevel);
+                            db.SaveChanges();
+                            return RedirectToAction("IndexPointLevel");
                         }
                         else
                         {
-                            pointLevel.SchoolID = user.SchoolID;
+                            TempData["notice"] = "The current name of point level is exist";
+                            return RedirectToAction("IndexPointLevel");
                         }
-                        db.PointLevels.Add(pointLevel);
-                        db.SaveChanges();
-                        return RedirectToAction("IndexPointLevel");
                     }
                     return View(model);
                 }
@@ -368,8 +448,8 @@ namespace journal.Controllers
                     var userPointList = db.Points.Where(c => c.User.SchoolID == user.SchoolID).Count();
                     if (userPointList == 0)
                     {
-                        var model = db.PointLevels.Include(c => c.School).Where(c => (c.SchoolID == user.SchoolID && c.School.IsActive == true)||(c.School.IsActive==true&&user.UserRollID==superAdminRole)).Select(c=>new PointLevelViewModels()
-                        {
+                        var model = db.PointLevels.Include(c => c.School).Where(c => c.ID==id&& ((c.SchoolID == user.SchoolID && c.School.IsActive == true)||(c.School.IsActive==true&&user.UserRollID==superAdminRole))).Select(c=>new PointLevelViewModels()
+                        {      
                             ID=c.ID,
                             Name=c.Name,
                             Level=c.Level,

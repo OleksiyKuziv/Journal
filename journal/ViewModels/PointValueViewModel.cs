@@ -13,6 +13,7 @@ namespace journal.ViewModels
         public Guid ID { get; set; }
         [Required]
         public string Name { get; set; }
+        public int Value { get; set; }
         public Guid? SchoolID { get; set; }
         public List<SelectListItem> Schools { get; set; }
         public string SelectedSchool { get; set; }
@@ -20,7 +21,8 @@ namespace journal.ViewModels
         {
             return new PointValue
             {
-                Name = model.Name
+                Name = model.Name,
+                Value=model.Value                
             };
         }
     }

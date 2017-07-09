@@ -25,6 +25,7 @@ namespace journal.Controllers
                 Guid parentRole = Guid.Parse(Roles.Parent);
                 Guid monitorGroup = Guid.Parse(Roles.MonitorGroup);
                 Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                Guid principle = Guid.Parse(Roles.Principle);
                 StudyUserSubjectDropdownViewModel studyUserSubjectDropdown = new StudyUserSubjectDropdownViewModel();
                 var identity = (ClaimsIdentity)User.Identity;
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
@@ -45,7 +46,7 @@ namespace journal.Controllers
                         .Include(c => c.User)
                         .Include(c => c.Subject)
                         .Where(c =>
-                    (user.UserRollID == adminRole && c.User.SchoolID == user.SchoolID)
+                    ((user.UserRollID == adminRole||user.UserRollID==principle) && c.User.SchoolID == user.SchoolID)
                     ||
                     (c.UserID == user.ID && c.User.UserRollID == pupilRole && c.User.SchoolID == user.SchoolID)
                     ||

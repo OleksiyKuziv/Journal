@@ -89,7 +89,7 @@ namespace journal.ViewModels
         public int Age { get; set; }
         [Required]
         [Display(Name = "Phone")]
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public List<SelectListItem> Schools { get; set; }
         public string SelectedSchool { get; set; }
         public List<SelectListItem> Classes { get; set; }

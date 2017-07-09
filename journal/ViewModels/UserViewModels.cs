@@ -27,7 +27,7 @@ namespace journal.ViewModels
         public string Email { get; set; }
         [Required]
         [Display(Name = "phone number")]
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public string Password { get; set; }
         public Guid? ClassID { get; set; }
         public string Degree { get; set; }

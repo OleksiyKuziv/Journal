@@ -18,7 +18,7 @@ namespace journal.Models
         public Guid? UserRollID { get; set; }
         public virtual UserRole UserRole { get; set; }
         public string Email { get; set; }
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public string Password { get; set; }
         public Guid? ClassID { get; set; }
         public virtual Class Class { get; set; }
