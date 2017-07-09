@@ -5,6 +5,7 @@ using journal.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -40,7 +41,13 @@ namespace journal.Controllers
         [Roles(Roles.Admin,Roles.Teacher,Roles.Principle,Roles.SuperAdmin)]
         public ActionResult Create()
         {
-            return View();
+            using (JournalContext db = new JournalContext())
+            {
+                SubjectTypeViewModels model = new SubjectTypeViewModels();
+                model.Schools = db.Schools
+                    .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+            return View(model);
+            }
         }
 
         // POST: Subject/Create
@@ -49,16 +56,35 @@ namespace journal.Controllers
         public ActionResult Create(SubjectTypeViewModels model)
         {
             using (JournalContext db = new JournalContext())
-            {
-                if (ModelState.IsValid)
+            {                
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid UserId;
+                if (Guid.TryParse(idString, out UserId))
                 {
-                    SubjectType subjectType = (SubjectType)model;
-                    subjectType.ID = Guid.NewGuid();
-                    db.SubjectTypes.Add(subjectType);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    User user = db.Users.Find(UserId);
+                    if (ModelState.IsValid)
+                    {
+                        SubjectType subjectType = (SubjectType)model;
+                        subjectType.ID = Guid.NewGuid();
+                        if (user.UserRollID == Guid.Parse(Roles.SuperAdmin))
+                        {
+                            subjectType.SchoolID = Guid.Parse(model.SelectedSchool);
+                        }
+                        else
+                        {
+                            subjectType.SchoolID = user.SchoolID;
+                        }
+                        db.SubjectTypes.Add(subjectType);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    model.Schools = db.Schools
+                   .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
+                    return View(model);
                 }
-                return View(model);
+                return RedirectToAction("Login");
             }
         }
 

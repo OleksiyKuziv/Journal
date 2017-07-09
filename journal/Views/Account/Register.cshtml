@@ -1,4 +1,5 @@
 ﻿@model journal.ViewModels.RegisterViewModel
+    @using Roles=journal.Helpers
 @{
     ViewBag.Title = "Register";
 }
@@ -82,7 +83,7 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">School</p>
         <div class="col-md-10">
-            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool">
+            <select name="SelectedSchool" class="form-control" onchange="schoolChange()" id="selectedSchool" >
                 <option></option>
                 @foreach (var c in Model.Schools)
                 {
