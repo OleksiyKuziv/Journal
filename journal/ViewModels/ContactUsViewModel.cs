@@ -16,7 +16,7 @@ namespace journal.ViewModels
         public string FirstName { get; set; }
         [Required]
         [Display(Name ="last name")]
-        public string LastName { get; set; }
+        public string LastName { get; set; }       
         [Required]
         [Display(Name ="description")]
         public string Description { get; set; }
