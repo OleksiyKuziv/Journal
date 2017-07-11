@@ -11,7 +11,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Pupil</p>
             <div class="col-md-10">
-                <select name="SelectedUser" class="form-control">
+                <select name="SelectedUser" class="form-control" required>
                     <option></option>
                     @foreach (var c in Model.Users)
                 {
@@ -24,7 +24,7 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Study subject</p>
             <div class="col-md-10">
-                <select name="SelectedSubject" class="form-control">
+                <select name="SelectedSubject" class="form-control" required>
                     <option></option>
                     @foreach (var c in Model.Subjects)
                 {

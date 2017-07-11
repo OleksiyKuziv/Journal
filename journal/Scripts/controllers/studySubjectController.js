@@ -2,11 +2,12 @@
     $('#search').click(function () {
         var user = $("#user").val();
         var subject = $("#subject").val();
+        var school = $("#school").val();
         $.ajax({
             type: "GET",
             cache: false,
             url: "/StudySubject/Search",
-            data: { user, subject },
+            data: { user, subject, school },
             success: function (data) {
                 OnSuccess(data);
             }

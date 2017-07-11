@@ -40,6 +40,9 @@ namespace journal.Controllers
                     teacherSubjectViewModel.Subjects = db.Subjects
                         .Select(s => new SelectListItem() { Value = s.ID.ToString(), Text = s.SubjectType.Name })
                         .ToList();
+                    teacherSubjectViewModel.Schools = db.Schools
+                        .Select(c => new SelectListItem() { Value = c.ID.ToString(), Text = c.ShortName })
+                        .ToList();
                     teacherSubjectViewModel.TeacherSubjectViewModels = db.Subjects
                         .Include(s => s.Teacher)
                         .Include(s => s.SubjectType)
@@ -57,22 +60,46 @@ namespace journal.Controllers
             }
         }
 
-        public JsonResult Search(Guid? teacher, Guid? subject)
+        public JsonResult Search(Guid? teacher, Guid? subject,Guid? school)
         {        
             using (JournalContext db = new JournalContext())
             {
-                var newTeacherSubjectList = db.Subjects
+                var identity = (ClaimsIdentity)User.Identity;
+                var idString = identity.Claims
+                    .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                       .Select(c => c.Value).SingleOrDefault();
+                Guid id;
+                if (Guid.TryParse(idString, out id))
+                {
+                    User user = db.Users.Find(id);
+                    Guid superAdmin = Guid.Parse(Roles.SuperAdmin);
+                    var newTeacherSubjectList = db.Subjects
                     .Include(s => s.Teacher)
                     .Include(s => s.SubjectType)
-                    .Where(c=> (c.Teacher.ID == teacher && c.ID == subject) || (teacher== null && c.ID == subject)|| (c.Teacher.ID == teacher && subject == null) || (teacher==null&&subject==null))
+                    .Where(c => (
+                    (c.TeacherID == teacher && c.ID == subject && c.Teacher.SchoolID == school)
+                    || (teacher == null && c.ID == subject && c.Teacher.SchoolID == school)
+                    || (c.TeacherID == teacher && subject == null && c.Teacher.SchoolID == school)
+                    || (c.TeacherID == teacher && c.ID == subject && school == null)
+                    || (teacher == null && subject == null && c.Teacher.SchoolID==school)
+                    || (teacher == null && c.ID == subject && school == null)
+                    ||(c.TeacherID==teacher&& subject==null&&school==null)
+                    || (teacher == null && subject == null && school == null) && user.UserRollID == superAdmin)
+                    ||
+                    ((c.TeacherID == teacher && c.ID == subject)
+                    || (teacher == null && c.ID == subject)
+                    || (c.TeacherID == teacher && subject == null)
+                    || (teacher == null && subject == null) && c.Teacher.SchoolID == user.SchoolID))
                     .Select(s => new SubjectViewModels()
-                {
-                    ID = s.ID,
-                    SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
-                    SelectedSubjectType = s.SubjectType.Name
-                })
+                    {
+                        ID = s.ID,
+                        SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
+                        SelectedSubjectType = s.SubjectType.Name
+                    })
                 .ToList();
-                return Json(newTeacherSubjectList,JsonRequestBehavior.AllowGet);
+                    return Json(newTeacherSubjectList, JsonRequestBehavior.AllowGet);
+                }
+                return Json(JsonRequestBehavior.DenyGet);
             }
         }
 

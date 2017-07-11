@@ -10,6 +10,7 @@ namespace journal.ViewModels
     {
         public List<SelectListItem> Users { get; set; }
         public List<SelectListItem> Subjects { get; set; }
+        public IList<SelectListItem> Schools { get; set; }
         public List<StudySubjectViewModel> StudySubjects { get; set; }
     }
 }

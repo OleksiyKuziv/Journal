@@ -1,12 +1,13 @@
 ﻿$(document).ready(function () {
     $('#search').click(function () {
         var teacher = $("#teacher").val();
-        var subject = $("#subject").val();        
+        var subject = $("#subject").val();
+        var school = $("#school").val();
         $.ajax({
             type: "GET",
             cache: false,
             url: "/Subject/Search",
-            data: { teacher, subject },
+            data: { teacher, subject, school },
             success: function (data) {
                 OnSuccess(data);
             }

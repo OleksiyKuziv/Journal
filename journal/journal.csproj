@@ -213,6 +213,7 @@
     <Compile Include="ViewModels\StudySubjectViewModel.cs" />
     <Compile Include="ViewModels\StudyUserSubjectDropdownViewModel.cs" />
     <Compile Include="ViewModels\SubjectTypeViewModels.cs" />
+    <Compile Include="ViewModels\SubjectTypeWithDropdownViewModel.cs" />
     <Compile Include="ViewModels\SubjectViewModels.cs" />
     <Compile Include="ViewModels\TeacherSubjectViewModel.cs" />
     <Compile Include="ViewModels\UserRoleViewModels.cs" />
@@ -235,6 +236,7 @@
     <Content Include="Scripts\controllers\classController.js" />
     <Content Include="Scripts\controllers\studySubjectController.js" />
     <Content Include="Scripts\controllers\subjectController.js" />
+    <Content Include="Scripts\controllers\subjectTypeController.js" />
     <Content Include="Scripts\helpers\doubleClickEvent.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

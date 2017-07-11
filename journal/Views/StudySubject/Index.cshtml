@@ -6,6 +6,11 @@
 }
 <script src="~/Scripts/controllers/studySubjectController.js"></script>
 <h2>Index</h2>
+@if (TempData["notice"] != null)
+{
+    <h3 style="color:red">@TempData["notice"]</h3>
+}
+
 <div id="data" class="row">
     <div class="col-md-12">
         @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle)||User.IsInRole(Roles.Roles.Pupil)||User.IsInRole(Roles.Roles.SuperAdmin))
@@ -31,6 +36,17 @@
                     <option value="@c.Value">@c.Text</option>
                 }
             </select>
+            @if (User.IsInRole(Roles.Roles.SuperAdmin))
+            {
+                <label for="school">School</label>
+                <select class="form-control" id="school">
+                    <option></option>
+                    @foreach (var item in Model.Schools)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            }
             <button type="button" id="search" class="btn btn-default">Search</button>
         </div>
 

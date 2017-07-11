@@ -22,7 +22,7 @@
                           <option value="@c.Value">@c.Text</option>
                       }
                   </select>
-                  <label for="teacher">Subjects</label>
+                  <label for="subject">Subjects</label>
                   <select id="subject" class="form-control">
                       <option></option>
                       @foreach (var c in Model.Subjects)
@@ -30,6 +30,17 @@
                           <option value="@c.Value">@c.Text</option>
                       }
                   </select>
+              @if (User.IsInRole(Roles.Roles.SuperAdmin))
+              {
+              <label for="school">School</label>
+              <select id="school" class="form-control">
+                  <option></option>
+                  @foreach (var c in Model.Schools)
+                  {
+                      <option value="@c.Value">@c.Text</option>
+                  }
+              </select>
+              }
                   <button type="button" id="search" class="btn btn-default">Search</button>
               </div>
               

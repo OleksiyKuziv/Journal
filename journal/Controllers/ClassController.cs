@@ -37,7 +37,7 @@ namespace journal.Controllers
                 {
                     User user = db.Users.Find(id);
                     var newClassList = db.Classes
-                        .Include(c => c.Users).Include(s => s.School)
+                        .Include(c => c.Users).Include(s=>s.School)
                         .Where(c => (c.SchoolID == user.SchoolID&&c.ID==user.ClassID
                         &&(user.UserRollID==pupilRole||user.UserRollID==parentRole))
                     ||(user.UserRollID==superAdmin) 
