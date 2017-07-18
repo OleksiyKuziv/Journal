@@ -111,3 +111,4 @@ G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csprojResolv
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.InitialCreate.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csproj.GenerateResource.Cache
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB.resources
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB1.resources

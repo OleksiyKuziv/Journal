@@ -166,6 +166,7 @@
     <Compile Include="Controllers\StudySubjectController.cs" />
     <Compile Include="Controllers\SubjectTypeController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
+    <Compile Include="Controllers\TeacherPutPointController.cs" />
     <Compile Include="Filters\MyAuthorizeAttribute.cs" />
     <Compile Include="Filters\RolesAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -179,6 +180,10 @@
     <Compile Include="Migrations\201707081944129_MigrateDB.cs" />
     <Compile Include="Migrations\201707081944129_MigrateDB.Designer.cs">
       <DependentUpon>201707081944129_MigrateDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707121148429_MigrateDB1.cs" />
+    <Compile Include="Migrations\201707121148429_MigrateDB1.Designer.cs">
+      <DependentUpon>201707121148429_MigrateDB1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContactUs.cs" />
@@ -215,7 +220,9 @@
     <Compile Include="ViewModels\SubjectTypeViewModels.cs" />
     <Compile Include="ViewModels\SubjectTypeWithDropdownViewModel.cs" />
     <Compile Include="ViewModels\SubjectViewModels.cs" />
+    <Compile Include="ViewModels\TeacherPutPointViewModel.cs" />
     <Compile Include="ViewModels\TeacherSubjectViewModel.cs" />
+    <Compile Include="ViewModels\UserPointViewModel.cs" />
     <Compile Include="ViewModels\UserRoleViewModels.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
   </ItemGroup>
@@ -237,6 +244,7 @@
     <Content Include="Scripts\controllers\studySubjectController.js" />
     <Content Include="Scripts\controllers\subjectController.js" />
     <Content Include="Scripts\controllers\subjectTypeController.js" />
+    <Content Include="Scripts\controllers\teacherPutPoint.js" />
     <Content Include="Scripts\helpers\doubleClickEvent.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -315,6 +323,7 @@
     <Content Include="Views\School\IndexPointLevel.cshtml" />
     <Content Include="Views\School\EditPointLevel.cshtml" />
     <Content Include="Views\School\DeletePointValue.cshtml" />
+    <Content Include="Views\TeacherPutPoint\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -332,6 +341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707081944129_MigrateDB.resx">
       <DependentUpon>201707081944129_MigrateDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707121148429_MigrateDB1.resx">
+      <DependentUpon>201707121148429_MigrateDB1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
