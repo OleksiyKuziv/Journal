@@ -13,6 +13,7 @@
             <p class="col-md-2 col-sm-3 control-label">Pupil</p>
             <div class="col-md-10">
                 <select name="SelectedUser" class="form-control">
+
                     @foreach (var c in Model.Users)
                 {
                         <option value="@c.Value" selected='@(c.Text==Model.SelectedUser)'>@c.Text</option>

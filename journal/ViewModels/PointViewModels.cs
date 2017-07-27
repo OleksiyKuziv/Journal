@@ -20,7 +20,7 @@ namespace journal.ViewModels
         [Required]
         [Display(Name = "Тип оцінки")]
         public Guid? PointLevelID { get; set; }
-        public string SelectedPoinLevel { get; set; }
+        public string SelectedPointLevel { get; set; }
         public List<SelectListViewModel> PointLevels { get; set; }
         [Required]
         [Display(Name = "Предмет")]
@@ -31,6 +31,7 @@ namespace journal.ViewModels
         public Guid? UserID { get; set; }
         public List<SelectListViewModel> Users { get; set; }
         public string SelectedUser { get; set; }
-        public DateTime Date { get; set; }        
+        public DateTime Date { get; set; } 
+        public string StrDate { get; set; }
     }
 }

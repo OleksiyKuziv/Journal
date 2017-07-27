@@ -9,6 +9,7 @@ namespace journal.ViewModels
     {
         public string subjectid { get; set; }
         public string pointLevel { get; set; }
+        public string dataEdit { get; set; }
         public List<UserList> userList { get; set; }
     }
 

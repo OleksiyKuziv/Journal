@@ -14,5 +14,8 @@ namespace journal.ViewModels
         public List<SelectListViewModel> Subjects { get; set; }
         public List<PointViewModels> PointsView { get; set; }
         public List<SelectListViewModel> Classes { get; set; }
+        public Guid PointLevelEdit { get; set; }
+        public Guid? CurrentRole { get; set; }
+        public string DataEdit { get; set; }
     }
 }
