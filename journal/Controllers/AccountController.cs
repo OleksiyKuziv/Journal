@@ -138,7 +138,7 @@ namespace journal.Controllers
                     {
                         user.SchoolID = Guid.Parse(model.SelectedSchool);
                     }
-                    user.RegisterDate = DateTime.Now;                    
+                    user.RegisterDate = DateTime.Now.ToString("yyyy-MM-dd");                    
                     db.Users.Add(user);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");

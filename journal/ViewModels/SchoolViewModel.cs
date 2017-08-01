@@ -44,7 +44,7 @@ namespace journal.ViewModels
         [Display(Name = "regulatory")]
         public int Regulatory { get; set; }
         public bool IsActive { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
         public static explicit operator School(SchoolViewModel model)
         {
             return new School

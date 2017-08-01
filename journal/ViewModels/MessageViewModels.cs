@@ -25,6 +25,6 @@ namespace journal.ViewModels
         [Required]
         [Display(Name = "subject")]
         public string Subject { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
     }
 }

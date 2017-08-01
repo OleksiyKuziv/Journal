@@ -95,7 +95,7 @@ namespace journal.Controllers
                         .OrderBy(c => c.PointLevelID)
                         .ThenBy(c=>c.Date)
                         .ToList();
-                    model.PointsView.ForEach(c => c.StrDate = c.Date.ToString("dd-MM-yyyy"));
+                    model.PointsView.ForEach(c => c.StrDate =c.Date);
 
                 }  
                
@@ -120,21 +120,20 @@ namespace journal.Controllers
                 Guid subjectid = Guid.Parse(model.subjectid);
                 for (int i = 0; i < model.userList.Count(); i++)
                 {
-                    Guid user = Guid.Parse(model.userList[i].user);
-                    Guid value = Guid.Parse(model.userList[i].pointValue);
-                    var point = db.Points.Where(c => (c.PointLevelID == pointLevel && c.SubjectID == subjectid && c.UserId==user))
+                    Guid? user = model.userList[i].user;
+                    var point = db.Points.Where(c => (c.PointLevelID == pointLevel && c.SubjectID == subjectid && c.UserId == user))
                         .Select(c => new PointViewModels()
-                    {
-                        ID = c.ID,
-                        Date=c.Date
-                    }).ToList();
-                    point.ForEach(c => c.StrDate = c.Date.ToString("dd-MM-yyyy"));
+                        {
+                            ID = c.ID,
+                            Date = c.Date
+                        }).ToList();
+                    point.ForEach(c => c.StrDate = c.Date);
                     for (int j = 0; j < point.Count(); j++)
                     {
                         if (point[j].StrDate == model.dataEdit)
                         {
                             Point editpoint = db.Points.Find(point[j].ID);
-                            editpoint.PointValueID = value;
+                            editpoint.PointValueID = model.userList[i].pointValue;
                             db.SaveChanges();
                         }
                     }
@@ -154,12 +153,12 @@ namespace journal.Controllers
                             PointLevelID = c.PointLevelID,
                             SelectedPointValue = c.PointValue.Name,
                             PointValueID = c.PointValueID,
-                            Date = c.Date
+                            Date = c.Date,
+                            StrDate=c.Date
                         })
                         .OrderBy(c => c.PointLevelID)
                         .ThenBy(c => c.Date)
                         .ToList();
-                modelTeacher.PointsView.ForEach(c => c.StrDate = c.Date.ToString("dd-MM-yyyy"));
                 Guid schoolID = Guid.Parse(db.StudySubject.Where(c => c.SubjectID == subjectid).Select(c => c.User.SchoolID.ToString()).FirstOrDefault());
                 modelTeacher.PointValues = db.PointValues
                     .OrderBy(c => c.Value)
@@ -177,29 +176,38 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                if (model.pointLevel == null)
+                if (model.pointLevel == null||model.chooseData==null)
                 {
                     return Json(JsonRequestBehavior.DenyGet);
                 }
                 Guid subjectid = Guid.Parse(model.subjectid);
-                for (int i = 0; i < model.userList.Count(); i++)
+                Guid pointLevel = Guid.Parse(model.pointLevel);
+                string currentTime = DateTime.Now.ToString("yyyy-MM-dd");
+                if (db.Points.Where(c => c.PointLevelID == pointLevel && c.Date == currentTime).Count() == 0)
                 {
-                    Point point = new Point();
-                    point.ID = Guid.NewGuid();
-                    point.PointLevelID = Guid.Parse(model.pointLevel);
-                    point.SubjectID = Guid.Parse(model.subjectid);
-                    point.UserId = Guid.Parse(model.userList[i].user);
-                    if (model.userList[i].pointValue == null)
+                    for (int i = 0; i < model.userList.Count(); i++)
                     {
-                        point.PointValueID = null;
+                        Point point = new Point();
+                        point.ID = Guid.NewGuid();
+                        point.PointLevelID = Guid.Parse(model.pointLevel);
+                        point.SubjectID = Guid.Parse(model.subjectid);
+                        point.UserId = model.userList[i].user;
+                        if (model.userList[i].pointValue == null)
+                        {
+                            point.PointValueID = null;
+                        }
+                        else
+                        {
+                            point.PointValueID = model.userList[i].pointValue;
+                        }
+                        point.Date = model.chooseData;
+                        db.Points.Add(point);
+                        db.SaveChanges();
                     }
-                    else
-                    {
-                        point.PointValueID = Guid.Parse(model.userList[i].pointValue);
-                    }
-                    point.Date = DateTime.Now;
-                    db.Points.Add(point);
-                    db.SaveChanges();
+                }
+                else
+                {                    
+                    return Json(JsonRequestBehavior.DenyGet);
                 }
                 TeacherPutPointViewModel modelTeacher = new TeacherPutPointViewModel();
                 modelTeacher.PointsView = db.Points
@@ -216,12 +224,12 @@ namespace journal.Controllers
                             PointLevelID = c.PointLevelID,
                             SelectedPointValue = c.PointValue.Name,
                             PointValueID = c.PointValueID,
-                            Date = c.Date
+                            Date = c.Date,
+                            StrDate=c.Date
                         })
                         .OrderBy(c => c.PointLevelID)
                         .ThenBy(c => c.Date)
                         .ToList();
-                modelTeacher.PointsView.ForEach(c => c.StrDate = c.Date.ToString("dd-MM-yyyy"));
                 Guid schoolID = Guid.Parse(db.StudySubject.Where(c => c.SubjectID == subjectid).Select(c => c.User.SchoolID.ToString()).FirstOrDefault());
                 modelTeacher.PointValues = db.PointValues
                     .OrderBy(c => c.Value)
@@ -257,12 +265,12 @@ namespace journal.Controllers
                             PointLevelID = c.PointLevelID,
                             SelectedPointValue = c.PointValue.Name,
                             PointValueID = c.PointValueID,
-                            Date = c.Date
+                            Date = c.Date,
+                            StrDate=c.Date
                         })
                         .OrderBy(c => c.PointLevelID)
                         .ThenBy(c => c.Date)
                         .ToList();
-                modelTeacher.PointsView.ForEach(c => c.StrDate = c.Date.ToString("dd-MM-yyyy"));
                 Guid schoolID = Guid.Parse(db.StudySubject.Where(c => c.SubjectID == subjectid).Select(c => c.User.SchoolID.ToString()).FirstOrDefault());
                 modelTeacher.PointValues = db.PointValues
                     .OrderBy(c => c.Value)

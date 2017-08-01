@@ -185,6 +185,10 @@
     <Compile Include="Migrations\201707121148429_MigrateDB1.Designer.cs">
       <DependentUpon>201707121148429_MigrateDB1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708011258500_MigrateDB2.cs" />
+    <Compile Include="Migrations\201708011258500_MigrateDB2.Designer.cs">
+      <DependentUpon>201708011258500_MigrateDB2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContactUs.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
@@ -235,6 +239,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\2014-02-11.jpg" />
+    <Content Include="Images\calendar.gif" />
     <Content Include="Images\giphy.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -344,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707121148429_MigrateDB1.resx">
       <DependentUpon>201707121148429_MigrateDB1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708011258500_MigrateDB2.resx">
+      <DependentUpon>201708011258500_MigrateDB2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

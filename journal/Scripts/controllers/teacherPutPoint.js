@@ -5,7 +5,8 @@ function addPointToPupil()
     var subjectId = $('#subject').val();
     var pointLevel = $('#selectPointLevels').val();
     var users = $('.userRow').toArray();
-    var userList = [];    
+    var userList = [];
+    var chooseData = $('.chooseDatatime').val();
     users.forEach(function (e) {
         userList.push({
             user: e.id,
@@ -20,11 +21,18 @@ function addPointToPupil()
         data: JSON.stringify({
             userList: userList,
             subjectId: subjectId,
-            pointLevel: pointLevel
+            pointLevel: pointLevel,
+            chooseData: chooseData
         }),
         success: function (newdata) {
-            tableListWithoutPoints(newdata);             
-        }
+            debugger;
+            if (newdata == 1)
+            {
+                alert('Current point is exist');
+            }
+            tableListWithoutPoints(newdata);
+        },
+       
     });    
 }
 
@@ -99,6 +107,7 @@ function tableListWithoutPoints(newdata)
             for (var zzz = 0; zzz < pointLevel.length; zzz++) {
                 lineCurrentPointLevel += '<option value="' + pointLevel[zzz].Value + '">' + pointLevel[zzz].Text + '</option>';
             }
+            lineCurrentPointLevel +='<br/><input type="date" class="chooseDatatime form-control" required /></th>';
         }
         currentPointLevel.append(lineCurrentPointLevel);        
         for (var i = 0; i < user.length; i++) {
@@ -187,6 +196,7 @@ function tableListWithoutPoints(newdata)
             for (var zzz = 0; zzz < pointLevel.length; zzz++) {
                 lineCurrentPointLevel += '<option value="' + pointLevel[zzz].Value + '">' + pointLevel[zzz].Text + '</option>';
             }
+            lineCurrentPointLevel += '<input type="date" class="chooseDatatime form-control" required /></th></tr>';
         }
             currentPointLevel.append(lineCurrentPointLevel);
         

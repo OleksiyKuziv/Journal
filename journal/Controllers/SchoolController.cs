@@ -84,7 +84,7 @@ namespace journal.Controllers
                             {
                                 School school = (School)model;
                                 school.ID = Guid.NewGuid();
-                                school.TimeStamp = DateTime.Now;
+                                school.TimeStamp = DateTime.Now.ToString("yyyy-MM-dd");
                                 school.IsActive = true;
                                 db.Schools.Add(school);
                                 if (user.UserRollID != superAdmin)

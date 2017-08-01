@@ -34,7 +34,7 @@ namespace journal.ViewModels
         public string Info { get; set; }
         public string UserRollSelected { get; set; }
         public string ClassSelected { get; set; }
-        public DateTime RegisterDate { get; set; }
+        public string RegisterDate { get; set; }
         public Guid? SchoolID { get; set; }
         public string SelectedSchool {get;set;}
         public static explicit operator User(UserViewModels model) {

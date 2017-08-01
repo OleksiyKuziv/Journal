@@ -20,6 +20,6 @@ namespace journal.Models
         public virtual Subject Subject { get; set; }
         public Guid? UserId { get; set; }
         public virtual User User { get; set; }
-        public DateTime Date { get; set; }        
+        public string Date { get; set; }        
     }
 }

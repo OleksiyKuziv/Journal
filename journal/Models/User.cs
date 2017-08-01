@@ -24,7 +24,7 @@ namespace journal.Models
         public virtual Class Class { get; set; }
         public string Degree { get; set; }
         public string Info { get; set; }
-        public DateTime RegisterDate { get; set; }
+        public string RegisterDate { get; set; }
         public Guid? SchoolID { get; set; }
         public virtual School School { get; set; }
         public ICollection<StudySubject> StudySubjects { get; set; }
