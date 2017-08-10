@@ -5,6 +5,10 @@
     ViewBag.Title = "Index";
 }
 <h2>Index</h2>
+@if (TempData["notice"] != null)
+{
+<h3 style="color:red">@TempData["notice"]</h3>
+}
 <div id="data" class="row">
     <div class="col-md-12">
         @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle)||User.IsInRole(Roles.Roles.SuperAdmin))

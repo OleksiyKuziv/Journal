@@ -10,6 +10,7 @@ using System.Data.Entity;
 using journal.Helpers;
 using System;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace journal.Controllers
 {

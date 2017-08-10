@@ -53,6 +53,7 @@ namespace journal.Controllers
                             SelectedTeacher = s.Teacher.FirstName + " " + s.Teacher.LastName,
                             SelectedSubjectType = s.SubjectType.Name
                         })
+                        .OrderBy(c=>c.SelectedTeacher)
                         .ToList();
                     return View(teacherSubjectViewModel);
                 }

@@ -11,11 +11,11 @@
     <div class="form-group">
         <p class="col-md-2 col-sm-3 control-label">Teacher</p>
         <div class="col-md-10">
-            <select name="SelectedTeacher" class="form-control">
+            <select name="SelectedTeacher" class="form-control" required>
                 <option></option>
                 @foreach (var c in Model.Teachers)
                 {
-                    <option value="@c.Value">@c.Text</option>
+                    <option selected='@(c.Text==Model.SelectedTeacher)' value="@c.Value">@c.Text</option>
                 }
             </select>
             @Html.ValidationMessageFor(m => m.SelectedTeacher, null, new { @class = "ErrorMessage help-block" })
@@ -24,19 +24,19 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Subject Type</p>
             <div class="col-md-10">
-                <select name="SelectedSubjectType" class="form-control">
+                <select name="SelectedSubjectType" class="form-control" required>
                     <option></option>
                     @foreach (var c in Model.SubjectTypes)
                 {
-                        <option value="@c.Value">@c.Text</option>
+                        <option selected='@(c.Text==Model.SelectedSubjectType)' value="@c.Value">@c.Text</option>
                     }
                 </select>
                 @Html.ValidationMessageFor(m => m.SelectedSubjectType, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
     </fieldset>

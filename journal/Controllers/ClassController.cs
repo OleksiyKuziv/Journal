@@ -58,6 +58,8 @@ namespace journal.Controllers
                         )
                         .ToList()
                     })
+                    .OrderBy(c=>c.Year)
+                    .ThenBy(c=>c.Name)
                     .ToList();
                     return View(newClassList);
                 }
@@ -138,32 +140,41 @@ namespace journal.Controllers
                 var idString = identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
                        .Select(c => c.Value).SingleOrDefault();
                 Guid id;
-                if (Guid.TryParse(idString, out id))
+                if (db.Classes.Where(c => c.Name == model.Name).Count() == 0)
                 {
-                    User user = db.Users.Find(id);
-                    if (user.UserRollID == superAdminRole)
+                    if (Guid.TryParse(idString, out id))
                     {
-                        model.Schools = db.Schools
-                            .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
-                            .ToList();
-                        model.SchoolID = Guid.Parse(model.SelectedSchool);
+                        User user = db.Users.Find(id);
+                        if (user.UserRollID == superAdminRole)
+                        {
+                            model.Schools = db.Schools
+                                .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                                .ToList();
+                            model.SchoolID = Guid.Parse(model.SelectedSchool);
+                        }
+                        else
+                        {
+                            model.SchoolID = user.SchoolID;
+                        }
+                        if (ModelState.IsValid)
+                        {
+                            Class classes = (Class)model;
+                            classes.ID = Guid.NewGuid();
+                            classes.SchoolID = model.SchoolID;
+                            db.Classes.Add(classes);
+                            db.SaveChanges();
+                            return RedirectToAction("Index");
+                        }
+                        return View(model);
                     }
-                    else
-                    {
-                        model.SchoolID = user.SchoolID;
-                    }
-                    if (ModelState.IsValid)
-                    {
-                        Class classes = (Class)model;
-                        classes.ID = Guid.NewGuid();
-                        classes.SchoolID = model.SchoolID;
-                        db.Classes.Add(classes);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-                    return View(model);
+                    return RedirectToAction("Login");
                 }
-                return RedirectToAction("Login");
+                else
+                {
+                    TempData["notice"] = "Current class are already exist";
+                    return RedirectToAction("Index");
+                }
+               
             }
         }
 

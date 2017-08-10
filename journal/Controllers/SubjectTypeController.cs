@@ -38,7 +38,9 @@ namespace journal.Controllers
                             Name = c.Name,
                             Description = c.Description,
                             SelectedSchool = c.School.ShortName
-                        }).ToList();
+                        })
+                        .OrderBy(c=>c.Name)
+                        .ToList();
                     if (User.IsInRole(Roles.SuperAdmin))
                     {
                         model.Schools = db.Schools.Select(c => new SelectListItem() { Value = c.ID.ToString(), Text = c.ShortName }).ToList();

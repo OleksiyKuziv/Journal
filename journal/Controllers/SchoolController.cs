@@ -205,7 +205,7 @@ namespace journal.Controllers
                         Name = c.Name,
                         Value=c.Value,
                         SelectedSchool = c.School.ShortName
-                    }).ToList();
+                    }).OrderBy(c=>c.Value).ToList();
                     return View(newPointValueList);
                 }
             }
@@ -355,7 +355,7 @@ namespace journal.Controllers
                         Name = c.Name,
                         Level = c.Level,
                         SelectedSchool = c.School.ShortName
-                    }).ToList();
+                    }).OrderBy(c => c.Level).ToList();
                     return View(newPointLevelList);
                 }
             }
