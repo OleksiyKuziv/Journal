@@ -28,6 +28,7 @@ namespace journal.ViewModels
         [Required]
         [Display(Name = "phone number")]
         public string Phone { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         public string Password { get; set; }
         public Guid? ClassID { get; set; }
         public string Degree { get; set; }
@@ -55,5 +56,5 @@ namespace journal.ViewModels
                 SchoolID=model.SchoolID
             };
         }
-    }
+    }    
 }

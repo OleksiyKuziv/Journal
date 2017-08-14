@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System;
 
 namespace journal.Models
 {
@@ -22,6 +23,7 @@ namespace journal.Models
 
     public class ChangePasswordViewModel
     {
+        public Guid ID { get; set; }
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]

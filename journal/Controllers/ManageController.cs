@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using journal.Models;
+using journal.ViewModels;
+using journal.Helpers;
 
 namespace journal.Controllers
 {
@@ -36,9 +38,21 @@ namespace journal.Controllers
 
         //
         // GET: /Manage/ChangePassword
-        public ActionResult ChangePassword()
-        {
-            return View();
+        public ActionResult ChangePassword(Guid? id)
+        { 
+            if(id==null)
+            {
+                return RedirectToAction("Login");
+            }
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Find(id);
+                ChangePasswordViewModel model = new ChangePasswordViewModel();
+                model.ID = user.ID;
+                model.OldPassword = RijndaelForPassword.DecryptStringAES(user.Password, user.Email);
+
+                return View(model);
+            } 
         }
 
         //
@@ -51,8 +65,19 @@ namespace journal.Controllers
             {
                 return View(model);
             }
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Find(model.ID);
 
-            return View(model);
+                if (model.OldPassword != RijndaelForPassword.DecryptStringAES(user.Password, user.Email))
+                {
+                    TempData["notice"] = "Old password doesn't correct";
+                    return View(model);
+                }
+                user.Password = RijndaelForPassword.EncryptStringAES(model.NewPassword, user.Email);
+                await db.SaveChangesAsync();
+            return RedirectToAction("AccountInfo","Account");
+            }
         }
 
         //

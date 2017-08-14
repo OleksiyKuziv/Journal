@@ -106,7 +106,6 @@ namespace journal.ViewModels
                 Age = model.Age,
                 Email = model.Email,
                 Phone = model.Phone,
-                Password = model.Password,
                 UserRollID = Guid.Parse(model.SelectedRole)                
             };
                

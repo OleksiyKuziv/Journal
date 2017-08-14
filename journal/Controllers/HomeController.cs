@@ -96,7 +96,7 @@ namespace journal.Controllers
                 userRole.ID = Guid.NewGuid();
                 db.UserRoles.Add(userRole);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index");             
             }
         }
         #endregion

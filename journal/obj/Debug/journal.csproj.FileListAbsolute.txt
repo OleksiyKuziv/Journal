@@ -113,3 +113,4 @@ G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.csproj.Gener
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB1.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB2.resources
+G:\Projects VisualStudio Practise\journal\journal\bin\Rijndael256.dll

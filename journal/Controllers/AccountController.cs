@@ -11,10 +11,12 @@ using journal.Helpers;
 using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace journal.Controllers
 {
     [Authorize]
+    [SessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
     public class AccountController : Controller
     {
 
@@ -46,7 +48,12 @@ namespace journal.Controllers
                 using (JournalContext db = new JournalContext())
                 {
                     User user = await db.Users/*.Include(u => u.UserRollId)*/
-                        .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                        .FirstOrDefaultAsync(u => u.Email == model.Email);
+                    string password = RijndaelForPassword.DecryptStringAES(user.Password, user.Email);
+                    if (password != model.Password)
+                    {
+                        ModelState.AddModelError("", "Неправельний пароль");
+                    }
                     if (user == null)
                     {
                         ModelState.AddModelError("", "Неправильний логін або пароль");
@@ -139,9 +146,15 @@ namespace journal.Controllers
                     {
                         user.SchoolID = Guid.Parse(model.SelectedSchool);
                     }
-                    user.RegisterDate = DateTime.Now.ToString("yyyy-MM-dd");                    
-                    db.Users.Add(user);
-                    db.SaveChanges();
+                    user.RegisterDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    using (Rijndael rijndael = Rijndael.Create())
+                    {
+                        string password = RijndaelForPassword.EncryptStringAES(model.Password, model.Email);
+                        user.Password = password;
+                    }
+                   
+                        db.Users.Add(user);
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Index", "Home");
                 }
                 return View(model);
