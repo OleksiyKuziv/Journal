@@ -172,7 +172,7 @@ namespace journal.Controllers
                     {
                         smpt.Host = "smtp.gmail.com";
                         smpt.Port = 587;
-                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh15091994");
+                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh1509");
                         //smpt.ServerCertificateValidationCallback = () => true;
                         smpt.EnableSsl = true;
                         smpt.Send(message);
@@ -210,7 +210,8 @@ namespace journal.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            return View();
+            ForgotPasswordViewModel model = new ForgotPasswordViewModel();
+            return View(model);
         }
 
         //
@@ -222,13 +223,35 @@ namespace journal.Controllers
         {
             if (ModelState.IsValid)
             {
-                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                //{
-                //    // Don't reveal that the user does not exist or is not confirmed
-                //    return View("ForgotPasswordConfirmation");
-                //}
-
-
+                using (JournalContext db = new JournalContext())
+                {
+                    User user = db.Users.Where(c => c.Email == model.Email).FirstOrDefault();
+                    if (user == null)
+                    {
+                        TempData["notice"] = "The user cannot be found";
+                        return View();
+                    }
+                    System.Net.Mail.MailMessage message = new System.Net.Mail.MailMessage(
+                       new System.Net.Mail.MailAddress("kuzivoles@gmail.com", "Journal Web Application"),
+                       new System.Net.Mail.MailAddress(user.Email));
+                    message.Subject = "Forgot Password";
+                    message.Body = string.Format("Dear {0} " +
+                        "<BR/> We receive a request to access your Journal Account {1}  " +
+                        "throught your email address.Following the link:<a href=\"{2}\"title=\"User Email Confirm\">{2}</a>",
+                        user.FirstName + " " + user.LastName, user.Email, Url.Action("ResetPassword", "Account",
+                        new { Token = user.ActivationKey }, Request.Url.Scheme));
+                    message.IsBodyHtml = true;
+                    using (var smpt = new SmtpClient())
+                    {
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh1509");
+                        //smpt.ServerCertificateValidationCallback = () => true;
+                        smpt.EnableSsl = true;
+                        await smpt.SendMailAsync(message);
+                        return RedirectToAction("ForgotPasswordConfirmation");
+                    }
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -246,9 +269,11 @@ namespace journal.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(Guid? Token)
         {
-            return code == null ? View("Error") : View();
+            ResetPasswordViewModel model = new ResetPasswordViewModel();
+            model.Token = Token;
+            return Token == null ? View("Error") : View();
         }
 
         //
@@ -262,8 +287,28 @@ namespace journal.Controllers
             {
                 return View(model);
             }
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Where(c => c.ActivationKey == model.Token).FirstOrDefault();
+                if (user.Email != model.Email)
+                {
+                    TempData["notice"] = "You are input incorrect email.";
+                    return View(model);
+                }                
+                using (Rijndael rjndl = Rijndael.Create())
+                {
 
-            return View();
+                    string password = RijndaelForPassword.DecryptStringAES(user.Password, user.Email);
+                    if (password == model.Password)
+                    {
+                        TempData["notice"] = "You are inpul old password. Please enter new password.";
+                        return View(model);
+                    }
+                    user.Password = RijndaelForPassword.EncryptStringAES(model.Password, user.Email);
+                    await db.SaveChangesAsync();
+                }
+            }
+                return RedirectToAction("Login");
         }
 
         [Authorize]

@@ -66,7 +66,7 @@ namespace journal.Controllers
                         var credential = new NetworkCredential
                         {
                             UserName = "kuzivoles@gmail.com",  // replace with valid value
-                            Password = "M@kintosh15091994"  // replace with valid value
+                            Password = "M@kintosh1509"  // replace with valid value
                         };
                         smpt.Credentials = credential;
                         smpt.Host = "smtp.gmail.com";
