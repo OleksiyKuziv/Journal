@@ -193,6 +193,14 @@
     <Compile Include="Migrations\201708011258500_MigrateDB2.Designer.cs">
       <DependentUpon>201708011258500_MigrateDB2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708141000226_AddConfirmEmail.cs" />
+    <Compile Include="Migrations\201708141000226_AddConfirmEmail.Designer.cs">
+      <DependentUpon>201708141000226_AddConfirmEmail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708141119459_MigrateDb3.cs" />
+    <Compile Include="Migrations\201708141119459_MigrateDb3.Designer.cs">
+      <DependentUpon>201708141119459_MigrateDb3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ContactUs.cs" />
     <Compile Include="Models\IdentityExtensions.cs" />
@@ -356,6 +364,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708011258500_MigrateDB2.resx">
       <DependentUpon>201708011258500_MigrateDB2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708141000226_AddConfirmEmail.resx">
+      <DependentUpon>201708141000226_AddConfirmEmail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708141119459_MigrateDb3.resx">
+      <DependentUpon>201708141119459_MigrateDb3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

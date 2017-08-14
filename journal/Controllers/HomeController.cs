@@ -61,18 +61,18 @@ namespace journal.Controllers
                     message.Body = string.Format(body, model.FirstName, model.LastName, model.Description);
                     message.IsBodyHtml = true;
 
-                    using (var smtp = new SmtpClient())
+                    using (var smpt = new SmtpClient())
                     {
                         var credential = new NetworkCredential
                         {
                             UserName = "kuzivoles@gmail.com",  // replace with valid value
                             Password = "M@kintosh15091994"  // replace with valid value
                         };
-                        smtp.Credentials = credential;
-                        smtp.Host = "smtp.gmail.com";
-                        smtp.Port = 587;
-                        smtp.EnableSsl = true;
-                        await smtp.SendMailAsync(message);
+                        smpt.Credentials = credential;
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.EnableSsl = true;
+                        await smpt.SendMailAsync(message);
                         TempData["notice"] = "Thank you for your description";
                         return View();
                     }

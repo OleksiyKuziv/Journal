@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net.Mail;
 
 namespace journal.Controllers
 {
@@ -137,6 +138,7 @@ namespace journal.Controllers
                     }
                     User user = (User)model;
                     user.ID = Guid.NewGuid();
+                    user.ActivationKey = Guid.NewGuid();
                     if (user.UserRollID == Guid.Parse(Roles.Pupil) || user.UserRollID == Guid.Parse(Roles.Parent) || user.UserRollID == Guid.Parse(Roles.MonitorGroup))
                     {
                         user.SchoolID = Guid.Parse(model.SelectedSchool);
@@ -152,11 +154,31 @@ namespace journal.Controllers
                         string password = RijndaelForPassword.EncryptStringAES(model.Password, model.Email);
                         user.Password = password;
                     }
+                    //ConfirmEmail(user.ID,)
                    
-                        db.Users.Add(user);
+                    db.Users.Add(user);
                     await db.SaveChangesAsync();
-                    return RedirectToAction("Index", "Home");
-                }
+                    System.Net.Mail.MailMessage message = new System.Net.Mail.MailMessage(
+                        new System.Net.Mail.MailAddress("kuzivoles@gmail.com","Journal Web Application"),
+                        new System.Net.Mail.MailAddress(user.Email));
+                    message.Subject = "Email Confirmation";
+                    message.Body = string.Format("Dear {0} " +
+                        "<BR/> Thank you for your registration, please click on the below link to compare" +
+                        "your registration:<a href=\"{1}\"title=\"User Email Confirm\">{1}</a>",
+                        user.FirstName + " " + user.LastName, Url.Action("ConfirmEmail", "Account", 
+                        new { Token = user.ActivationKey}, Request.Url.Scheme));
+                    message.IsBodyHtml = true;
+                    using (var smpt = new SmtpClient())
+                    {
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh15091994");
+                        //smpt.ServerCertificateValidationCallback = () => true;
+                        smpt.EnableSsl = true;
+                        smpt.Send(message);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    }
                 return View(model);
             }            
         }
@@ -164,14 +186,23 @@ namespace journal.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public async Task<ActionResult> ConfirmEmail(Guid? Token)
         {
-            if (userId == null || code == null)
+            if (Token == null)
             {
                 return View("Error");
             }
-
-            return View(/*result.Succeeded*/ true ? "ConfirmEmail" : "Error");
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Where(c => c.ActivationKey==Token).FirstOrDefault();
+                if (user != null)
+                {
+                    user.ConfirmEmail = true;
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Login");
+                }
+            return View("ConfirmEmail");
+            }
         }
 
         //
