@@ -116,3 +116,11 @@ G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.M
 G:\Projects VisualStudio Practise\journal\journal\bin\Rijndael256.dll
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.AddConfirmEmail.resources
 G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDb3.resources
+G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.AspNet.SignalR.Core.dll
+G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.AspNet.SignalR.Core.xml
+G:\Projects VisualStudio Practise\journal\journal\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+G:\Projects VisualStudio Practise\journal\journal\bin\System.Xml.XmlDocument.dll
+G:\Projects VisualStudio Practise\journal\journal\bin\System.Xml.XPath.dll
+G:\Projects VisualStudio Practise\journal\journal\bin\System.Xml.XPath.XDocument.dll
+G:\Projects VisualStudio Practise\journal\journal\obj\Debug\journal.Migrations.MigrateDB4.resources

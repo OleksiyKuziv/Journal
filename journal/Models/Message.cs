@@ -20,6 +20,6 @@ namespace journal.Models
         public virtual MessageType MessageType { get; set; }
         public string Text { get; set; }
         public string Subject { get; set; }
-        public string TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

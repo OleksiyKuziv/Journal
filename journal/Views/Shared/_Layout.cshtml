@@ -21,7 +21,7 @@
                 </button>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Home", "Index", "Home", new { area = ""}, new { @class = "navbar-brand" })
                 }
                 else{
                 @Html.ActionLink("Home","Index","Home",new { area=""},new {@class="navbar-brand" })
@@ -35,6 +35,7 @@
                         <li>@Html.ActionLink("Class", "Index", "Class")</li>
                         <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Admin))
                     {
@@ -44,6 +45,7 @@
                         <li>@Html.ActionLink("Subject","Index","Subject")</li>
                         <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.SuperAdmin))
                     {
@@ -53,6 +55,7 @@
                         <li>@Html.ActionLink("Subject", "Index", "Subject")</li>
                         <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Principle))
                     {
@@ -62,6 +65,7 @@
                         <li>@Html.ActionLink("Subject", "Index", "Subject")</li>
                         <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Parent))
                     {
@@ -69,6 +73,7 @@
                         <li>@Html.ActionLink("Class", "Index", "Class")</li>
                         <li>@Html.ActionLink("Study Subject", "Index", "StudySubject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else if (User.IsInRole(Roles.Roles.Teacher))
                     {
@@ -77,6 +82,7 @@
                         <li>@Html.ActionLink("SubjectType", "Index", "SubjectType")</li>
                         <li>@Html.ActionLink("Subject","Index","Subject")</li>
                         <li>@Html.ActionLink("Put point", "Index", "TeacherPutPoint")</li>
+                        <li>@Html.ActionLink("Message", "Index", "Message")</li>
                     }
                     else
                     {

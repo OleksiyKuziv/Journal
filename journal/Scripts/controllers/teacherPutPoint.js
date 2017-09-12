@@ -10,7 +10,7 @@ function addPointToPupil()
     users.forEach(function (e) {
         userList.push({
             user: e.id,
-            pointValue: $(e).find(".selectedPointValues").val()
+            pointValue: $(e).find(".k-button").val()
         });
     });
     $.ajax({
