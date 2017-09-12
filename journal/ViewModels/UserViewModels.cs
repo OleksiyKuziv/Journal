@@ -27,14 +27,15 @@ namespace journal.ViewModels
         public string Email { get; set; }
         [Required]
         [Display(Name = "phone number")]
-        public long Phone { get; set; }
+        public string Phone { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         public string Password { get; set; }
         public Guid? ClassID { get; set; }
         public string Degree { get; set; }
         public string Info { get; set; }
         public string UserRollSelected { get; set; }
         public string ClassSelected { get; set; }
-        public DateTime RegisterDate { get; set; }
+        public string RegisterDate { get; set; }
         public Guid? SchoolID { get; set; }
         public string SelectedSchool {get;set;}
         public static explicit operator User(UserViewModels model) {
@@ -55,5 +56,5 @@ namespace journal.ViewModels
                 SchoolID=model.SchoolID
             };
         }
-    }
+    }    
 }

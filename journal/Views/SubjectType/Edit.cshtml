@@ -10,9 +10,9 @@
     <fieldset>
         <input type="hidden" name="Id" value="@Model.ID" />
         <div class="form-group">
-            <p class="col-md-2 col-sm-3 control-label">Name of subject</p>
+            <p class="col-md-2 col-sm-3 control-label">Subject</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="Name" value="@Model.Name" />
+                <input class="form-control" type="text" name="Name" value="@Model.Name" autofocus required oninvalid="this.setCustomValidity('Please enter valid Subject')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
@@ -21,14 +21,14 @@
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Description</p>
             <div class="col-md-10">
-                <input class="form-control" name="Description" type="text" value="@Model.Description" />
-                @Html.ValidationMessageFor(m => m.Description, null, new { @class = "ErrorMessage help-block" })
+                <textarea class="form-control" name="Description" required oninvalid="this.setCustomValidity('Please enter valid Description')" oninput="setCustomValidity('')">@Model.Description</textarea>
+               @Html.ValidationMessageFor(m => m.Description, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>        
         <div class="form-group">
 
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
 

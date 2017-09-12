@@ -23,7 +23,7 @@ namespace journal.ViewModels
         public List<SelectListItem> Schools { get; set; }
         public string SelectedSchool { get; set; }
         public Guid? UserID { get; set; }
-        public List<SelectListItem> Users { get; set; }
+        public List<SelectListViewModel> Users { get; set; }
         public List<SelectListItem> NewUsersList { get; set; }
         public string SelectedNewPupil { get; set; }
         public static explicit operator Class(ClassViewModels model)
@@ -31,8 +31,7 @@ namespace journal.ViewModels
             return new Class
             {
                 Name=model.Name,
-                Year=model.Year,
-                SchoolID=Guid.Parse(model.SelectedSchool)
+                Year=model.Year
             };
         }
     }

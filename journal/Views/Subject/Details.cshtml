@@ -11,7 +11,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            Name of Teacher
+            Teacher
         </dt>
 
         <dd>
@@ -19,7 +19,7 @@
         </dd>
 
         <dt>
-            Name of Subject
+            Subject
         </dt>
 
         <dd>
@@ -28,7 +28,7 @@
      </dl>
 </div>
 <p>
-    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
     {
     <a href="~/Subject/Edit/@Model.ID">Edit</a>
     }

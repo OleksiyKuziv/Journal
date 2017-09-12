@@ -48,3 +48,9 @@
     .server-validation ul {
         list-style-type: none;
     }
+table{
+    overflow: auto;
+}
+.point {
+    display:block;
+}

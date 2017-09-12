@@ -22,5 +22,6 @@ namespace journal.Models
         public DbSet<PointValue> PointValues { get; set; }
         public DbSet<StudySubject> StudySubject { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<ContactUs> ContactUs { get; set; }
     }
 }

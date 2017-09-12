@@ -8,6 +8,10 @@ using journal.Models;
 using journal.Helpers;
 using journal.ViewModels;
 using journal.Filters;
+using System.Web.ModelBinding;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace journal.Controllers
 {
@@ -30,26 +34,61 @@ namespace journal.Controllers
         [HttpGet]
         public ActionResult Contact()
         {
-
-            return View();
+            ContactUsViewModel model = new ContactUsViewModel();
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Contact(string fname, string lname, string description)
+        public async Task<ActionResult> Contact(ContactUsViewModel model)
         {
-            ViewBag.Message = "Thank you for your description.";
+            if (ModelState.IsValid)
+            {
+                using (JournalContext db = new JournalContext())
+                {
+                    ContactUs contactUs = new ContactUs();
+                    contactUs.ID = Guid.NewGuid();
+                    contactUs.FirstName = model.FirstName;
+                    contactUs.LastName = model.LastName;
+                    contactUs.Description = model.Description;
+                    db.ContactUs.Add(contactUs);
+                    db.SaveChanges();
 
-            return View();
+                    var body = "<p>Email From: {0} {1}</p><p>Message:</p><p>{2}</p>";
+                    var message = new MailMessage();
+                    message.To.Add(new MailAddress("kuzivo@ukr.net"));
+                    message.From = new MailAddress("kuzivoles@gmail.com");
+                    message.Subject = "Your email subject";
+                    message.Body = string.Format(body, model.FirstName, model.LastName, model.Description);
+                    message.IsBodyHtml = true;
+
+                    using (var smpt = new SmtpClient())
+                    {
+                        var credential = new NetworkCredential
+                        {
+                            UserName = "kuzivoles@gmail.com",  // replace with valid value
+                            Password = "M@kintosh1509"  // replace with valid value
+                        };
+                        smpt.Credentials = credential;
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.EnableSsl = true;
+                        await smpt.SendMailAsync(message);
+                        TempData["notice"] = "Thank you for your description";
+                        return View();
+                    }
+                }
+            }                    
+            return View(model);
         }
         #region Roles
-        [Roles(Roles.Admin)]
+        [Roles(Roles.SuperAdmin)]
         [HttpGet]
         public ActionResult UserRole()
         {
             return View();
         }
         [HttpPost]
-        [Roles(Roles.Admin)]
+        [Roles(Roles.SuperAdmin)]
         public ActionResult UserRole(UserRole userRole)
         {
             using (JournalContext db = new JournalContext())
@@ -57,7 +96,7 @@ namespace journal.Controllers
                 userRole.ID = Guid.NewGuid();
                 db.UserRoles.Add(userRole);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index");             
             }
         }
         #endregion

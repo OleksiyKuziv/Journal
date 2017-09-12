@@ -15,5 +15,7 @@ namespace journal.Models
         public Guid ID { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
+        public Guid? SchoolID { get; set; }
+        public virtual School School { get; set; }
     }
 }

@@ -27,7 +27,7 @@
     </dl>
 </div>
 <p>
-    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+    @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
     {
     <a href="~/SubjectType/Edit/@Model.ID">Edit</a>
     }

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace journal.ViewModels
 {
@@ -18,6 +19,9 @@ namespace journal.ViewModels
         [Required]
         [Display(Name = "level")]
         public int Level { get; set; }
+        public Guid? School { get; set; }
+        public List<SelectListItem> Schools { get; set; }
+        public string SelectedSchool { get; set; }
         public static explicit operator PointLevel(PointLevelViewModels model)
         {
             return new PointLevel

@@ -1,0 +1,64 @@
+﻿@model List<journal.ViewModels.PointLevelViewModels>
+@using Roles = journal.Helpers
+@{
+    ViewBag.Title = "IndexPointLevel";
+}
+
+<h2>IndexPointLevel</h2>
+@if (TempData["notice"] != null)
+{
+    <h3 style="color:red">@TempData["notice"]</h3>
+}
+
+@if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
+{
+    <p>
+        <a href="~/School/CreatePointLevel">Створити новий тип оцінки</a>
+    </p>
+}
+<table class="table table-hover">
+    <thead>
+        <tr class="danger">
+            <th>
+                Name
+            </th>
+            <th>
+                Level
+            </th>
+            <th></th>
+            @if (User.IsInRole(Roles.Roles.SuperAdmin))
+            {
+                <th>
+                    School
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{var counter = -1;}
+        @foreach (var item in Model)
+        {
+            counter++;
+            <tr class='@(counter % 2 == 0 ? "success" : "")'>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Level
+                </td>
+                @if (User.IsInRole(Roles.Roles.SuperAdmin))
+                {
+                    <td>
+                        @item.SelectedSchool
+                    </td>
+                }
+                <td>
+                    <a href="~/School/EditPointLevel/@item.ID">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a href="~/School/Index">Back to School</a>
+</div>

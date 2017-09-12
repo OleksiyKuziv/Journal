@@ -45,10 +45,13 @@
             <div class="col-md-10 form-inline">
                 <select name="SelectedNewPupil" id="availableUsers" class="form-control" >
                     <option></option>
-                    @foreach (var c in Model.NewUsersList)
+                    @foreach (var c in Model.Users)
                     {
+                        if (c.ValueClass.IsEmpty())
+                        {
                         <option value="@c.Value">@c.Text</option>
-                    }
+                        }
+                        }
                 </select>
                 <button class="btn btn-default" type="button" onclick="addPupilsToClass()">Add</button>
             </div>
@@ -71,7 +74,9 @@
                     @{var counter = -1; }
                     @foreach (var item in Model.Users)
                     {
-                        counter++;
+                        if (!item.ValueClass.IsEmpty())
+                        {
+                            counter++;
                         <tr class='@(counter % 2 == 0 ? "success" : "")'>
                             <td >
                                 @item.Text
@@ -81,6 +86,7 @@
                              </td>
                         
                         </tr>
+                        }
                     }
                         </tbody>                    
                 </table>
@@ -89,13 +95,13 @@
       </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
 
     </fieldset>
-                        }
+}
 
 <div>
     <a href="~/Class/Index">Back to List</a> 

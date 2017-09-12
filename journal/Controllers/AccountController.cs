@@ -9,10 +9,15 @@ using journal.ViewModels;
 using System.Data.Entity;
 using journal.Helpers;
 using System;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
+using System.Net.Mail;
 
 namespace journal.Controllers
 {
     [Authorize]
+    [SessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
     public class AccountController : Controller
     {
 
@@ -43,7 +48,13 @@ namespace journal.Controllers
             {
                 using (JournalContext db = new JournalContext())
                 {
-                    User user = await db.Users/*.Include(u => u.UserRollId)*/.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                    User user = await db.Users/*.Include(u => u.UserRollId)*/
+                        .FirstOrDefaultAsync(u => u.Email == model.Email);
+                    string password = RijndaelForPassword.DecryptStringAES(user.Password, user.Email);
+                    if (password != model.Password)
+                    {
+                        ModelState.AddModelError("", "Неправельний пароль");
+                    }
                     if (user == null)
                     {
                         ModelState.AddModelError("", "Неправильний логін або пароль");
@@ -86,9 +97,15 @@ namespace journal.Controllers
             RegisterViewModel model = new RegisterViewModel();
             using (JournalContext db = new JournalContext())
             {
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
-                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
+                model.Roles = db.UserRoles
+                    .Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name })
+                    .ToList();
+                model.Schools = db.Schools
+                    .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                    .ToList();
+                model.Classes = db.Classes
+                    .Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name })
+                    .ToList();
             }
             return View(model);
         }
@@ -102,46 +119,90 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-
+                model.Roles = db.UserRoles
+                    .Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name })
+                    .ToList();
+                model.Schools = db.Schools
+                    .Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName })
+                    .ToList();
+                model.Classes = db.Classes
+                    .Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name })
+                    .ToList();
+               
                 if (ModelState.IsValid)
                 {
                     if (db.Users.Any(u => u.Email == model.Email))
                     {
-                        model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
-                        model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                        model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
                         ModelState.AddModelError("Email", "Such email is used. Please choose another.");
                         return View(model);
                     }
                     User user = (User)model;
                     user.ID = Guid.NewGuid();
-                    user.RegisterDate = DateTime.Now;
+                    user.ActivationKey = Guid.NewGuid();
+                    if (user.UserRollID == Guid.Parse(Roles.Pupil) || user.UserRollID == Guid.Parse(Roles.Parent) || user.UserRollID == Guid.Parse(Roles.MonitorGroup))
+                    {
+                        user.SchoolID = Guid.Parse(model.SelectedSchool);
+                        user.ClassID = Guid.Parse(model.SelectedClass);
+                    }
+                    else if ((user.UserRollID == Guid.Parse(Roles.Principle) || user.UserRollID == Guid.Parse(Roles.Admin)&&(model.SelectedSchool!=null)) || user.UserRollID == Guid.Parse(Roles.Teacher))
+                    {
+                        user.SchoolID = Guid.Parse(model.SelectedSchool);
+                    }
+                    user.RegisterDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    using (Rijndael rijndael = Rijndael.Create())
+                    {
+                        string password = RijndaelForPassword.EncryptStringAES(model.Password, model.Email);
+                        user.Password = password;
+                    }
+                    //ConfirmEmail(user.ID,)
+                   
                     db.Users.Add(user);
-                    db.SaveChanges();
-
-
-                    return RedirectToAction("Index", "Home");
-
-                }
-                model.Roles = db.UserRoles.Select(role => new SelectListItem() { Value = role.ID.ToString(), Text = role.Name }).ToList();
-                model.Schools = db.Schools.Select(school => new SelectListItem() { Value = school.ID.ToString(), Text = school.ShortName }).ToList();
-                model.Classes = db.Classes.Select(@class => new SelectListItem() { Value = @class.ID.ToString(), Text = @class.Name }).ToList();
-            }
-            // If we got this far, something failed, redisplay form
-            return View(model);
+                    await db.SaveChangesAsync();
+                    System.Net.Mail.MailMessage message = new System.Net.Mail.MailMessage(
+                        new System.Net.Mail.MailAddress("kuzivoles@gmail.com","Journal Web Application"),
+                        new System.Net.Mail.MailAddress(user.Email));
+                    message.Subject = "Email Confirmation";
+                    message.Body = string.Format("Dear {0} " +
+                        "<BR/> Thank you for your registration, please click on the below link to compare" +
+                        "your registration:<a href=\"{1}\"title=\"User Email Confirm\">{1}</a>",
+                        user.FirstName + " " + user.LastName, Url.Action("ConfirmEmail", "Account", 
+                        new { Token = user.ActivationKey}, Request.Url.Scheme));
+                    message.IsBodyHtml = true;
+                    using (var smpt = new SmtpClient())
+                    {
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh1509");
+                        //smpt.ServerCertificateValidationCallback = () => true;
+                        smpt.EnableSsl = true;
+                        smpt.Send(message);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    }
+                return View(model);
+            }            
         }
 
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public async Task<ActionResult> ConfirmEmail(Guid? Token)
         {
-            if (userId == null || code == null)
+            if (Token == null)
             {
                 return View("Error");
             }
-
-            return View(/*result.Succeeded*/ true ? "ConfirmEmail" : "Error");
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Where(c => c.ActivationKey==Token).FirstOrDefault();
+                if (user != null)
+                {
+                    user.ConfirmEmail = true;
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Login");
+                }
+            return View("ConfirmEmail");
+            }
         }
 
         //
@@ -149,7 +210,8 @@ namespace journal.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            return View();
+            ForgotPasswordViewModel model = new ForgotPasswordViewModel();
+            return View(model);
         }
 
         //
@@ -161,13 +223,35 @@ namespace journal.Controllers
         {
             if (ModelState.IsValid)
             {
-                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                //{
-                //    // Don't reveal that the user does not exist or is not confirmed
-                //    return View("ForgotPasswordConfirmation");
-                //}
-
-
+                using (JournalContext db = new JournalContext())
+                {
+                    User user = db.Users.Where(c => c.Email == model.Email).FirstOrDefault();
+                    if (user == null)
+                    {
+                        TempData["notice"] = "The user cannot be found";
+                        return View();
+                    }
+                    System.Net.Mail.MailMessage message = new System.Net.Mail.MailMessage(
+                       new System.Net.Mail.MailAddress("kuzivoles@gmail.com", "Journal Web Application"),
+                       new System.Net.Mail.MailAddress(user.Email));
+                    message.Subject = "Forgot Password";
+                    message.Body = string.Format("Dear {0} " +
+                        "<BR/> We receive a request to access your Journal Account {1}  " +
+                        "throught your email address.Following the link:<a href=\"{2}\"title=\"User Email Confirm\">{2}</a>",
+                        user.FirstName + " " + user.LastName, user.Email, Url.Action("ResetPassword", "Account",
+                        new { Token = user.ActivationKey }, Request.Url.Scheme));
+                    message.IsBodyHtml = true;
+                    using (var smpt = new SmtpClient())
+                    {
+                        smpt.Host = "smtp.gmail.com";
+                        smpt.Port = 587;
+                        smpt.Credentials = new System.Net.NetworkCredential("kuzivoles@gmail.com", "M@kintosh1509");
+                        //smpt.ServerCertificateValidationCallback = () => true;
+                        smpt.EnableSsl = true;
+                        await smpt.SendMailAsync(message);
+                        return RedirectToAction("ForgotPasswordConfirmation");
+                    }
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -185,9 +269,11 @@ namespace journal.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(Guid? Token)
         {
-            return code == null ? View("Error") : View();
+            ResetPasswordViewModel model = new ResetPasswordViewModel();
+            model.Token = Token;
+            return Token == null ? View("Error") : View();
         }
 
         //
@@ -201,8 +287,28 @@ namespace journal.Controllers
             {
                 return View(model);
             }
+            using (JournalContext db = new JournalContext())
+            {
+                User user = db.Users.Where(c => c.ActivationKey == model.Token).FirstOrDefault();
+                if (user.Email != model.Email)
+                {
+                    TempData["notice"] = "You are input incorrect email.";
+                    return View(model);
+                }                
+                using (Rijndael rjndl = Rijndael.Create())
+                {
 
-            return View();
+                    string password = RijndaelForPassword.DecryptStringAES(user.Password, user.Email);
+                    if (password == model.Password)
+                    {
+                        TempData["notice"] = "You are inpul old password. Please enter new password.";
+                        return View(model);
+                    }
+                    user.Password = RijndaelForPassword.EncryptStringAES(model.Password, user.Email);
+                    await db.SaveChangesAsync();
+                }
+            }
+                return RedirectToAction("Login");
         }
 
         [Authorize]
@@ -216,29 +322,32 @@ namespace journal.Controllers
             if (Guid.TryParse(idString, out id))
             {
                 using (JournalContext db = new JournalContext())
-                {
-                    UserViewModels model = new UserViewModels();
-                    User user = db.Users.Find(id);
-                    model.ID = user.ID;
-                    model.FirstName = user.FirstName;
-                    model.LastName = user.LastName;
-                    model.Age = user.Age;
-                    model.UserRollID = user.UserRollID;
-                    model.Email = user.Email;
-                    model.Phone = user.Phone;
-                    model.Password = user.Password;
-                    model.ClassID = user.ClassID;
-                    model.Degree = user.Degree;
-                    model.Info = user.Info;
-                    model.RegisterDate = user.RegisterDate;
-                    model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
-                    model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
-                    return View(model);
+                {                    
+                    var user = db.Users
+                        .Include(c => c.UserRole)
+                        .Include(c => c.Class)
+                        .Include(c => c.School)
+                        .Where(c => c.ID == id).Select(c => new UserViewModels()
+                    {
+                        ID = c.ID,
+                        FirstName = c.FirstName,
+                        LastName = c.LastName,
+                        Age = c.Age,                        
+                        Email = c.Email,
+                        Phone = c.Phone,
+                        Degree = c.Degree,
+                        Info = c.Info,
+                        RegisterDate = c.RegisterDate,
+                        UserRollSelected=c.UserRole.Name,
+                        ClassSelected = c.Class.Name,
+                        SelectedSchool = c.School.ShortName
+                    }).FirstOrDefault();
+                    return View(user);
                 }
             }
             AuthenticationManager.SignOut();
             return View("LogIn");
-        }
+        }       
 
         [Authorize]
         [HttpGet]
@@ -246,24 +355,24 @@ namespace journal.Controllers
         {
             using (JournalContext db = new JournalContext())
             {
-                UserViewModels model = new UserViewModels();
-                User user = db.Users.Find(id);
-                model.ID = user.ID;
-                model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
-                model.Age = user.Age;
-                model.UserRollID = user.UserRollID;
-                model.Email = user.Email;
-                model.Phone = user.Phone;
-                model.Password = user.Password;
-                model.ClassID = user.ClassID;
-                model.Degree = user.Degree;
-                model.Info = user.Info;
-                model.SchoolID = user.SchoolID;
-                model.ClassSelected = db.Classes.Where(c => c.ID == model.ClassID).Select(x => x.Name).FirstOrDefault();
-                model.UserRollSelected = db.UserRoles.Where(c => c.ID == model.UserRollID).Select(x => x.Name).FirstOrDefault();
-                model.SelectedSchool = db.Schools.Where(c => c.ID == model.SchoolID).Select(c => c.ShortName).FirstOrDefault();
-                return View(model);
+                var user = db.Users
+                    .Include(c => c.UserRole)
+                    .Include(c => c.Class)
+                    .Include(c => c.School)
+                    .Where(c => c.ID == id)
+                    .Select(c => new UserViewModels()
+                {
+                    ID = c.ID,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    Age = c.Age,                    
+                    Email = c.Email,
+                    Phone = c.Phone,
+                    Degree = c.Degree,
+                    Info = c.Info 
+                })
+                .FirstOrDefault();
+                return View(user);
             }
         }
 
@@ -282,11 +391,7 @@ namespace journal.Controllers
                     user.Degree = model.Degree;
                     user.Email = model.Email;
                     user.Info = model.Info;
-                    user.Phone = model.Phone;
-                    user.ClassID = model.ClassID;
-                    user.Password = model.Password;
-                    user.UserRollID = model.UserRollID;
-                    
+                    user.Phone = model.Phone;                           
                     db.SaveChanges();
                     return RedirectToAction("AccountInfo");
                 }
@@ -299,15 +404,17 @@ namespace journal.Controllers
             using (JournalContext db = new JournalContext())
             {
                 Guid SelectedSchool = Guid.Parse(selectedSchool);
-                var @classList = db.Classes.Where(c => c.SchoolID == SelectedSchool).Include(c => c.School).Select(c => new ClassViewModels
+                var @classList = db.Classes
+                    .Include(c => c.School)
+                    .Where(c => c.SchoolID == SelectedSchool)
+                    .Select(c => new ClassViewModels
                 {
                     ID=c.ID,
                     Name=c.Name,
                     Year=c.Year,
                     SelectedSchool=c.School.ShortName
-                }).ToList();
-
-
+                })
+                .ToList();
             return Json(@classList, JsonRequestBehavior.AllowGet);
             }
         }

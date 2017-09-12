@@ -41,16 +41,7 @@
                 @Html.ValidationMessageFor(m => m.Age, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
-        <br />
-        <div class="form-group">
-            <p class="col-md-2 col-sm-3 control-label">Class</p>
-            <div class="col-md-10">
-                <input class="form-control" type="text" name="ClassSelected" value="@Model.ClassSelected" disabled/>
-                <input type="hidden" name="ClassID" value="@Model.ClassID"
-                @Html.ValidationMessageFor(m => m.ClassSelected, null, new { @class = "ErrorMessage help-block" })
-            </div>
-        </div>
-        <br />
+        <br />       
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label">Degree</p>
             <div class="col-md-10">
@@ -73,34 +64,10 @@
                 <input class="form-control" type="number" name="Phone" value="@Model.Phone" />
                 @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "ErrorMessage help-block" })
             </div>
-        </div>
-        <br />
+        </div>        
         <div class="form-group">
-            <p class="col-md-2 col-sm-3 control-label">UserRoll</p>
-            <div class="col-md-10">
-                <input class="form-control" type="text" name="UserRollSelected" value="@Model.UserRollSelected" disabled />
-                <input type="hidden" name="UserRollID" value="@Model.UserRollID" />
-                @Html.ValidationMessageFor(m => m.UserRollSelected, null, new { @class = "ErrorMessage help-block" })
-            </div>
-        </div>
-        <br/>
-        <div class="form-group">
-            <p class="col-md-2 col-sm-3 control-label">Change Password</p>
-            <div class="col-md-10">
-                <input class="form-control" type="password" name="Password" />
-                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
-            </div>
-        </div>
-    <div class="form-group">
-        <p class="col-md-2 col-sm-3 control-label">ConfirmPassword</p>
-        <div class="col-md-10">
-            <input class="form-control" type="password" name="ConfirmPassword" />
-            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "ErrorMessage help-block" })
-        </div>
-    </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
 

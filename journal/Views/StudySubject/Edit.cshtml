@@ -13,6 +13,7 @@
             <p class="col-md-2 col-sm-3 control-label">Pupil</p>
             <div class="col-md-10">
                 <select name="SelectedUser" class="form-control">
+
                     @foreach (var c in Model.Users)
                 {
                         <option value="@c.Value" selected='@(c.Text==Model.SelectedUser)'>@c.Text</option>
@@ -34,8 +35,8 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
     </fieldset>

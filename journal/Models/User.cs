@@ -18,13 +18,15 @@ namespace journal.Models
         public Guid? UserRollID { get; set; }
         public virtual UserRole UserRole { get; set; }
         public string Email { get; set; }
-        public long Phone { get; set; }
+        public bool ConfirmEmail { get; set; }
+        public Guid? ActivationKey { get; set; }
+        public string Phone { get; set; }
         public string Password { get; set; }
         public Guid? ClassID { get; set; }
         public virtual Class Class { get; set; }
         public string Degree { get; set; }
         public string Info { get; set; }
-        public DateTime RegisterDate { get; set; }
+        public string RegisterDate { get; set; }
         public Guid? SchoolID { get; set; }
         public virtual School School { get; set; }
         public ICollection<StudySubject> StudySubjects { get; set; }

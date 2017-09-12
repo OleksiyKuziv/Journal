@@ -12,14 +12,14 @@ namespace journal.Models
         [Key]
         [Index(IsUnique = true)]
         public Guid ID { get; set; }
-        public Guid? PointValue { get; set; }
-        public virtual PointValue PointValuew { get; set; }
+        public Guid? PointValueID { get; set; }
+        public virtual PointValue PointValue { get; set; }
         public Guid? PointLevelID { get; set; }
         public virtual PointLevel PointLevel { get; set; }
         public Guid? SubjectID { get; set; }
         public virtual Subject Subject { get; set; }
         public Guid? UserId { get; set; }
         public virtual User User { get; set; }
-        public DateTime Date { get; set; }        
+        public string Date { get; set; }        
     }
 }

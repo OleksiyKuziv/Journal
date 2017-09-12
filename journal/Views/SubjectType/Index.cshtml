@@ -1,53 +1,84 @@
-﻿@model IEnumerable<journal.Models.SubjectType>
+﻿@model journal.ViewModels.SubjectTypeWithDropdownViewModel
 @using Roles=journal.Helpers
 @{
     ViewBag.Title = "Index";
 }
-
+<script src="~/Scripts/controllers/subjectTypeController.js"></script>
 <h2>Index</h2>
+@if (TempData["notice"] != null)
+{
+          <h3 style="color:red">@TempData["notice"]</h3>
+}
+
 <div id="data" class="row">
     <div class="col-md-12">
-       @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Teacher) || User.IsInRole(Roles.Roles.Principle))
+       @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Teacher) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
        {
         <p>
             <a href="~/SubjectType/Create">Create new subject</a>
         </p>
        }
-        <table class="table table-hover">
-            <tr class="danger">
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                </th>
-            </tr>
-            @{ var counter = -1;}
-            @foreach (var item in Model)
-            {
-                counter++;
-                <tr class='@(counter%2==0?"success":"")'>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>                    
-                    <td>
-                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
-                        {
-                        <a href="~/SubjectType/Edit/@item.ID">Edit</a> 
-                        }
-                        <a href="~/SubjectType/Details/@item.ID">Details</a> 
-                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
-                        {
-                        <a href="~/SubjectType/Delete/@item.ID">Delete</a>
-                        }
-                    </td>
-                </tr>
+<div class="form-inline">
+    @if (User.IsInRole(Roles.Roles.SuperAdmin))
+    {
+        
+            <label for="teacher">School</label>
+            <select class="form-control" id="school">
+                <option></option>
+                @foreach (var c in Model.Schools)
+                {
+                    <option value="@c.Value">@c.Text</option>
+                }
+            </select>
+
+            <button type="button" id="search" class="btn btn-default">Search</button>
+        
             }
-        </table>
+    </div>
+        <br />
+                  <table class="table table-hover">
+                      <tr class="danger">
+                          <th>
+                              Name
+                          </th>
+                          <th>
+                              Description
+                          </th>
+                          <th>
+                              Scholl
+                          </th>
+                          <th>
+                          </th>
+                      </tr>
+                      <tbody id="tablebody">
+                      @{ var counter = -1;}
+                      @foreach (var item in Model.SubjectTypes)
+                      {
+                          counter++;
+                          <tr class='@(counter%2==0?"success":"")'>
+                              <td>
+                                  @item.Name
+                              </td>
+                              <td>
+                                  @item.Description
+                              </td>
+                              <td>
+                                  @item.SelectedSchool
+                              </td>
+                              <td>
+                                  @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
+                                  {
+                                      <a href="~/SubjectType/Edit/@item.ID">Edit</a>
+                                  }
+                                  <a href="~/SubjectType/Details/@item.ID">Details</a>
+                                  @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle) || User.IsInRole(Roles.Roles.SuperAdmin))
+                                  {
+                                      <a href="~/SubjectType/Delete/@item.ID">Delete</a>
+                                  }
+                              </td>
+                          </tr>
+                      }
+                          </tbody>
+                  </table>
     </div>
 </div>

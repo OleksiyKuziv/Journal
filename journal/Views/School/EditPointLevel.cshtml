@@ -1,0 +1,51 @@
+﻿@model journal.ViewModels.PointLevelViewModels
+@using Roles=journal.Helpers
+@{
+    ViewBag.Title = "EditPointLevel";
+}
+
+<h2>EditPointLevel</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <div>
+            <input type="hidden" name="ID" value="@Model.ID" id="classID" />
+            <div class="form-group">
+                <p class="col-md-2 col-sm-3 control-label">Name</p>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="Name" value="@Model.Name" required oninvalid="this.setCustomValidity('Please enter valid Name')" oninput="setCustomValidity('')" />
+                    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <p class="col-md-2 col-sm-3 control-label">Level</p>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" name="Level" value="@Model.Level" required  oninvalid="this.setCustomValidity('Please enter valid Level')" oninput="setCustomValidity('')" />
+                    @Html.ValidationMessageFor(m => m.Level, null, new { @class = "ErrorMessage help-block" })
+                </div>
+            </div>
+            <br />
+            @if (User.IsInRole(Roles.Roles.SuperAdmin))
+            {
+            <div class="form-group">
+                <p class="col-md-2 col-sm-3 control-label">School</p>
+                <div class="col-md-10">
+                    <input class="form-control" type="text" value="@Model.SelectedSchool" disabled />
+                    
+                </div>
+            </div>
+            }
+            <div class="form-group">
+                <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                    <input class="submit btn btn-default" type="submit" value="Submit">
+                </div>
+            </div>
+         </div>
+        </fieldset>
+}
+<div>
+    <a href="~/School/IndexPointValue">Back to List</a>
+</div>
+

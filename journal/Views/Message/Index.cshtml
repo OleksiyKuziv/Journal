@@ -1,0 +1,67 @@
+﻿@model journal.ViewModels.MessageViewModels
+@{
+    ViewBag.Title = "Index";
+}
+<h2></h2>
+<br />
+<link href="~/Content/messageStyle.css" rel="stylesheet" />
+<link href="~/Content/kendo/styles/kendo.common-material.min.css" rel="stylesheet" />
+<link href="~/Content/kendo/styles/kendo.material.min.css" rel="stylesheet" />
+<link href="~/Content/kendo/styles/kendo.material.mobile.min.css" rel="stylesheet" />
+@section scripts{
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+@*<script src="~/signalr/hubs" type="text/javascript"></script>*@
+<script src="~/Scripts/kendo/js/jquery.min.js"></script>
+<script src="~/Scripts/kendo/js/kendo.all.min.js"></script>
+<script src="~/Scripts/controllers/messageController.js"></script>
+}
+
+<div id="example" role="application">
+    <div class="demo-section k-content wide">  
+        <table>
+            <thead class="form-inline">
+            <tr>
+                <th width="300">
+                <select id="userList" title="UserList">
+                    </select>
+                    </th>
+                <th>
+                    <div id="tabstrip" class="col-md-offset-6 col-lg-offset-10 ">
+                    <ul>
+                        @foreach (var item in Model.MessageTypeList)
+                        {
+                            <li class="@item.Text" id="@item.Value">@item.Text</li>
+                        }                  
+
+                    </ul>
+                    <div class="email">
+                        <div class="emailHistory">                         
+                        </div>
+                        <div>
+                            <input type="text" id="emailSubject" class="form-control" placeholder="Topic" />                            
+                            <textarea id="emailText" class="form-control" rows="3"></textarea>
+                            <input type="button" class="btn btn-default" name="Messanger" value="Send" onclick="emailSend()" />
+                        </div>
+                    </div>
+                    <div class="messanger">
+                      <div class="messangerHistory"></div>
+                        <div>
+                            <textarea class="form-control" rows="3"></textarea>
+                            <input type="button" class="btn btn-default" name="Messanger" value="Send" onclick="messangerSend()" />
+                        </div>
+                    </div>
+                    <div class="sms">
+                        <div class="smsHistory"></div>
+                        <div>
+                            <textarea class="form-control" rows="3"></textarea>
+                            <input type="button" class="btn btn-default" name="Sms" value="Send" onclick="smsSend()" />
+                        </div></div>
+                </div>
+                </th>
+                </tr>
+            </thead>
+        </table>
+      
+    </div>
+</div>

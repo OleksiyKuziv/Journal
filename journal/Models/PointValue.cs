@@ -13,6 +13,7 @@ namespace journal.Models
         [Index(IsUnique = true)]
         public Guid ID { get; set; }
         public string Name { get; set; }
+        public int Value { get; set; }
         public Guid? SchoolID { get; set; }
         public virtual School School { get; set; }
 

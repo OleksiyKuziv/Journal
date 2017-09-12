@@ -1,4 +1,5 @@
 ﻿@model journal.ViewModels.PointLevelViewModels
+@using Roles=journal.Helpers
 @{
     ViewBag.Title = "CreatePointLevel";
 }
@@ -24,13 +25,28 @@
             </div>
         </div>
         <br />
+        @if (User.IsInRole(Roles.Roles.SuperAdmin))
+        {
+            <div class="form-group">
+                <p class="col-md-2 col-sm-3 control-label">School</p>
+                <div class="col-md-10">
+                    <select name="SelectedSchool" class="form-control">
+                        <option></option>
+                        @foreach (var c in Model.Schools)
+                    {
+                            <option value="@c.Value">@c.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        }
         <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input id="btnSubmit" class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input id="btnSubmit" class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
     </fieldset>
 }
 <div>
-    <a href="~/School/Index">Back to List</a>
+    <a href="~/School/IndexPointLevel">Back to List</a>
 </div>

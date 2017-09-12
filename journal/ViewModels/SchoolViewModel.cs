@@ -31,13 +31,12 @@ namespace journal.ViewModels
         public int ZipCode { get; set; }
         [Required]
         [Display(Name = "address")]
-        public string Address1 { get; set; }
-        [Required]
+        public string Address1 { get; set; }        
         [Display(Name = "address")]
         public string Address2 { get; set; }
         [Required]
         [Display(Name = "phone number")]
-        public long PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Required]
         [Display(Name = "email")]
         public string Email { get; set; }
@@ -45,7 +44,7 @@ namespace journal.ViewModels
         [Display(Name = "regulatory")]
         public int Regulatory { get; set; }
         public bool IsActive { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public string TimeStamp { get; set; }
         public static explicit operator School(SchoolViewModel model)
         {
             return new School

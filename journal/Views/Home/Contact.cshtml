@@ -1,14 +1,27 @@
-﻿@{
-    ViewBag.Title = "Contactus";
+﻿@model journal.ViewModels.ContactUsViewModel
+@{
+    ViewBag.Title = "Contact us";
 }
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
+@if (TempData["notice"] != null)
+{
+<h3 style="color:red">@TempData["notice"]</h3>
+}
 
 <form action="/Home/Contact" method="post">
-    First name: <input type="text" name="fname" />
-    Last name: <input type="text" name="lname">
-    Description: <input type="text" name="description">    
-    <input type="submit" value="Submit" />
+    <div class=" form-group">
+        First name: <input type="text" name="FirstName" required oninvalid="this.setCustomValidity('Please enter valid FirstName')" oninput="setCustomValidity('')" />
+        
+        Last name: <input type="text" name="LastName" required oninvalid="this.setCustomValidity('Please enter valid LastName')" oninput="setCustomValidity('')">
+        
+        @*Email: <input type="email" name="Emaul" placeholder="someone@example.com" required oninvalid="this.setCustomValidity('Please enter valid Email')" oninput="setCustomValidity('')">*@
+        
+        Description:  <textarea name="Description" rows="4" cols="50" maxlength="250"> </textarea>
+        <div class="image">
+            <input type="submit" value="Submit" class="submit btn btn-default" />
+        </div>
+    </div>
 </form>
 
 

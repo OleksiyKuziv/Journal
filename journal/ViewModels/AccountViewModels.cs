@@ -89,7 +89,7 @@ namespace journal.ViewModels
         public int Age { get; set; }
         [Required]
         [Display(Name = "Phone")]
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public List<SelectListItem> Schools { get; set; }
         public string SelectedSchool { get; set; }
         public List<SelectListItem> Classes { get; set; }
@@ -105,11 +105,8 @@ namespace journal.ViewModels
                 LastName = model.LastName,
                 Age = model.Age,
                 Email = model.Email,
-                Phone=model.Phone,
-                Password=model.Password,
-                UserRollID=Guid.Parse(model.SelectedRole),
-                SchoolID=Guid.Parse(model.SelectedSchool),
-                ClassID=Guid.Parse(model.SelectedClass)
+                Phone = model.Phone,
+                UserRollID = Guid.Parse(model.SelectedRole)                
             };
                
         }
@@ -133,7 +130,7 @@ namespace journal.ViewModels
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public string Code { get; set; }
+        public Guid? Token { get; set; }
     }
 
     public class ForgotPasswordViewModel

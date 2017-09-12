@@ -1,4 +1,5 @@
 ﻿@model journal.ViewModels.SubjectTypeViewModels
+    @using Roles=journal.Helpers
 @{
     ViewBag.Title = "Create";
 }
@@ -9,22 +10,38 @@
     @Html.AntiForgeryToken()
     <fieldset>
         <div class="form-group">
-            <p class="col-md-2 col-sm-3 control-label"> Name of subject</p>
+            <p class="col-md-2 col-sm-3 control-label">Subject</p>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="Name" />
+                <input class="form-control" type="text" name="Name" value="@Model.Name" autofocus required oninvalid="this.setCustomValidity('Please enter valid First Name')" oninput="setCustomValidity('')" />
                 @Html.ValidationMessageFor(m => m.Name, null, new { @class = "ErrorMessage help-block" })
             </div>
         </div>
         <div class="form-group">
             <p class="col-md-2 col-sm-3 control-label"> Description</p>
             <div class="col-md-10">
-                <textarea class="form-control"rows="3" name="Description" ></textarea>
+                <textarea class="form-control"rows="3" name="Description" required oninvalid="this.setCustomValidity('Please enter valid Description')" oninput="setCustomValidity('')" >@Model.Description</textarea>
                 @Html.ValidationMessageFor(m => m.Description, null, new { @class = "ErrorMessage help-block" })
             </div>
+            @if (User.IsInRole(Roles.Roles.SuperAdmin))
+            {
+                <div class="form-group">
+                    <p class="col-md-2 col-sm-3 control-label">Schools</p>
+                    <div class="col-md-10">
+                        <select name="SelectedSchool" class="form-control" required>
+                            <option></option>
+                            @foreach(var item in Model.Schools)
+                               {
+                                    <option value="@item.Value">@item.Text</option>
+                               }
+                        </select>
+                    </div>
+                </div>
+            }
+
         </div>       
         <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-10">
-                <input class="btn btn-default" type="submit" value="Submit">
+            <div class="image col-md-offset-2 col-sm-offset-3 col-md-10">
+                <input class="submit btn btn-default" type="submit" value="Submit">
             </div>
         </div>
     </fieldset>

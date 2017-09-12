@@ -13,6 +13,7 @@
 function onSuccessClassList(selectedClassList) {
     var selectedClass = $('#selectedClass');    
     selectedClass.empty();
+    selectedClass.append('<option></option>');
     for (var i = 0; i < selectedClassList.length; i++)
     {
         selectedClass.append('<option value="' + selectedClassList[i].ID + '">' + selectedClassList[i].Name+'</option>')

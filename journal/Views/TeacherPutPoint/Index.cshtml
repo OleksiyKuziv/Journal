@@ -1,0 +1,41 @@
+﻿@model journal.ViewModels.TeacherPutPointViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/controllers/teacherPutPoint.js"></script>
+<h2>Index</h2>
+
+<div id="data" class="row">
+    <div class="col-md-12">
+          <div class="form-inline" >              
+            <label hidden class="currentRole" >@Model.CurrentRole</label>
+            <label for="subject">Subject</label>
+            <select class="form-control" id="subject">
+                <option></option>
+                @foreach (var item in Model.Subjects)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>           
+            <button type="button" class="btn btn-default" onclick="Search()">Search</button>
+        </div>
+        <br />        
+        <div class="table-striped">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="">
+                    <table class="point table table-hover">                        
+                        <thead class="currentPointLevel">
+
+                        </thead>
+                        <tbody id="tablebody">                       
+                           
+                        </tbody>
+                       </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+

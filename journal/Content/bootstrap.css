@@ -220,8 +220,8 @@ textarea {
 }
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;    
 }
 
 @media print {
@@ -288,7 +288,7 @@ table {
   .label {
     border: 1px solid black;
   }
-  .table {
+  .table {     
     border-collapse: collapse !important;
   }
    

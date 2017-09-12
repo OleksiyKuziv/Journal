@@ -1,118 +1,225 @@
 ﻿@model IEnumerable<journal.Models.School>
-@using Roles=journal.Helpers
+@using Roles = journal.Helpers
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
+@if (TempData["notice"] != null)
+{
+    <h3 style="color:red">@TempData["notice"]</h3>
+}
+@if (User.IsInRole(Roles.Roles.SuperAdmin))
+{
+    <div id="data" class="row">
+        <div class="col-md-12">           
+                <p>
+                    <a href="~/School/Create">Створити нову школу</a>
+                    <br />
+                    <a href="~/School/IndexPointValue">Переглянути оцінки</a>
+                    <br />
+                    <a href="~/School/IndexPointLevel">Переглянути типи оцінок</a>
+                </p>
 
-<div id="data" class="row">
-    <div class="col-md-12">
-        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle))
-        {
-        <p>
-            <a href="~/School/Create">Створити нову школу</a>
-            <br />
-            <a href="~/School/CreatePointValue">Створити нову оцінку</a>
-            <br />
-            <a href="~/School/CreatePointLevel">Створити новий тип оцінок</a>
-        </p>
-        }
-        <table class="table table-hover">
-            <tr class="danger">
-                <th>
-                    Full Name
-                </th>
-                <th>
-                    Short Name
-                </th>
-                <th>
-                    Type School
-                </th>
-                <th>
-                    Degree
-                </th>
-                <th>
-                    Owner Ship
-                </th>
-                <th>
-                    Zip Code
-                </th>
-                <th>
-                    Address1
-                </th>
-                <th>
-                    Address2
-                </th>
-                <th>
-                    PhoneNumber
-                </th>
-                <th>
-                    Email
-                </th>               
-                <th>
-                    Regulatory
-                </th>
-                <th>
-                    Data of created
-                </th>
-                <th>
-                </th>
-            </tr>           
-            @{var counter = -1;} 
-                        @foreach (var item in Model)
-                        {
-                            counter++;
-                    <tr class='@(counter%2==0?"success":"")'>
-                    <td>
-                        @item.FullName
-                    </td>
-                    <td>
-                        @item.ShortName
-                    </td>
-                    <td>
-                        @item.TypeSchool
-                    </td>
-                    <td>
-                        @item.Degree
-                    </td>
-                    <td>
-                        @item.OwnerShip
-                    </td>
-                    <td>
-                        @item.ZipCode
-                    </td>
-                    <td>
-                        @item.Address1
-                    </td>
-                    <td>
-                        @item.Address2
-                    </td>
-                    <td>
-                        @item.PhoneNumber
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.Regulatory
-                    </td>
+            <table class="table table-hover">
+                <tr class="danger">
+                    <th>
+                        Full Name
+                    </th>
+                    <th>
+                        Short Name
+                    </th>
+                    <th>
+                        Type School
+                    </th>
+                    <th>
+                        Degree
+                    </th>
+                    <th>
+                        Owner Ship
+                    </th>
+                    <th>
+                        Zip Code
+                    </th>
+                    <th>
+                        Address1
+                    </th>
+                    <th>
+                        Address2
+                    </th>
+                    <th>
+                        PhoneNumber
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Regulatory
+                    </th>
+                    <th>
+                        Data of created
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+                @{var counter = -1;}
+                @foreach (var item in Model)
+                {
+                    counter++;
+                    <tr class='@(counter % 2 == 0 ? "success" : "")'>
+                        <td>
+                            @item.FullName
+                        </td>
+                        <td>
+                            @item.ShortName
+                        </td>
+                        <td>
+                            @item.TypeSchool
+                        </td>
+                        <td>
+                            @item.Degree
+                        </td>
+                        <td>
+                            @item.OwnerShip
+                        </td>
+                        <td>
+                            @item.ZipCode
+                        </td>
+                        <td>
+                            @item.Address1
+                        </td>
+                        <td>
+                            @item.Address2
+                        </td>
+                        <td>
+                            @item.PhoneNumber
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.Regulatory
+                        </td>
                         <td>
                             @item.TimeStamp
                         </td>
-                    <td>
-                        @if (User.IsInRole(Roles.Roles.Admin)||User.IsInRole(Roles.Roles.Principle))
-                        {
-                        <a href="~/School/Edit/@item.ID">Edit</a>
-                        }
-                        <a href="~/School/Details/@item.ID">Details</a>
+                        <td>
+                            <a href="~/School/Edit/@item.ID">Edit</a>                           
+                            <a href="~/School/Details/@item.ID">Details</a>
+                                <a href="~/School/Delete/@item.ID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+
+@if (!User.IsInRole(Roles.Roles.SuperAdmin))
+{
+<div id="data" class="row">
+    <div class="col-md-12">
+        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+        {
+            <p>
+                <a href="~/School/Create">Створити нову школу</a>
+                <br />
+                <a href="~/School/IndexPointValue">Переглянути оцінки</a>
+                <br />
+                <a href="~/School/IndexPointLevel">Переглянути типи оцінок</a>
+            </p>
+        }
+        
+            @foreach (var item in Model)
+            {
+                <dl class="dl-horizontal">
+                    <dt>
+                        Full Name
+                    </dt>
+
+                    <dd>
+                        @item.FullName
+                    </dd>
+
+                    <dt>
+                        ShortName
+                    </dt>
+
+                    <dd>
+                        @item.ShortName
+                    </dd>
+
+                    <dt>
+                        Type school
+                    </dt>
+
+                    <dd>
+                        @item.TypeSchool
+                    </dd>
+                    <dt>
+                        Degree
+                    </dt>
+                    <dd>
+                        @item.Degree
+                    </dd>
+                    <dt>
+                        Owner Ship
+                    </dt>
+                    <dd>
+                        @item.OwnerShip
+                    </dd>
+                    <dt>
+                        Zip code
+                    </dt>
+                    <dd>
+                        @item.ZipCode
+                    </dd>
+                    <dt>
+                        Address1
+                    </dt>
+                    <dd>
+                        @item.Address1
+                    </dd>
+                    <dt>
+                        Address2
+                    </dt>
+                    <dd>
+                        @item.Address2
+                    </dd>
+                    <dt>
+                        Phone number
+                    </dt>
+                    <dd>
+                        @item.PhoneNumber
+                    </dd>
+                    <dt>
+                        Email
+                    </dt>
+                    <dd>
+                        @item.Email
+                    </dd>
+                    <dt>
+                        Regulatory
+                    </dt>
+                    <dd>
+                        @item.Regulatory
+                    </dd>
+                    </dl>
+                    <p>
                         @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
                         {
-                        <a href="~/School/Delete/@item.ID">Delete</a>
+                            <a href="~/School/Edit/@item.ID">Edit</a>
                         }
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
+                        <a href="~/School/Details/@item.ID"> Details </a>  
+                        @if (User.IsInRole(Roles.Roles.Admin) || User.IsInRole(Roles.Roles.Principle))
+                        {
+                            <a href="~/School/Delete/@item.ID">Delete</a>
+                        }
+
+                    </p>
+                    }
+                
+
 </div>
+</div>
+}
